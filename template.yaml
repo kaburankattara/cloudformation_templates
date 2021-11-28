@@ -50,6 +50,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -87,6 +88,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -98,6 +100,7 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -179,6 +182,7 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -232,6 +236,7 @@ Metadata:
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
     1c978c31-4068-4fd7-ac72-9e7b437406f1:
       size:
         width: 140
@@ -263,6 +268,14 @@ Metadata:
       embeds: []
       iscontainedinside:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+    22d7ead2-0b16-4370-95da-3288cb01dcd5:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 410
+        'y': 860
+      z: 0
 Resources:
   EC2VPC192ZN:
     Type: 'AWS::EC2::VPC'
@@ -433,3 +446,26 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b29cfcbd-5589-49db-8673-ebc2b2d34ac0
+  EC2SG2ZJDA:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: ssh
+      GroupName: ssh
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - Description: inbound
+          FromPort: 22
+          IpProtocol: -1
+          ToPort: -1
+      Tags:
+        - Key: Name
+          Value: ssh-securityGroup
+      VpcId: !Ref EC2VPC192ZN
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 22d7ead2-0b16-4370-95da-3288cb01dcd5
