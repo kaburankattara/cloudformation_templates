@@ -35,6 +35,12 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -57,6 +63,12 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -68,6 +80,12 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -119,6 +137,12 @@ Metadata:
       iscontainedinside:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -129,6 +153,18 @@ Metadata:
         x: 130
         'y': 80
       z: 0
+      embeds: []
+    7c04435f-3d0f-4144-a9fb-accc8da2a353:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 210
+        'y': 80
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
 Resources:
   EC2VPC192ZN:
     Type: 'AWS::EC2::VPC'
@@ -223,3 +259,16 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
+  EC2NG4592T:
+    Type: 'AWS::EC2::NatGateway'
+    DependsOn: EC2EIP4GQK5
+    Properties:
+      AllocationId: !GetAtt EC2EIP4GQK5.AllocationId
+      ConnectivityType: public
+      SubnetId: !Ref EC2SIZL8
+      Tags:
+        - Key: Name
+          Value: natGateway
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
