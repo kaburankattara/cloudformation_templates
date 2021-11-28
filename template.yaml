@@ -41,6 +41,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -69,6 +71,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -80,6 +84,8 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -143,6 +149,8 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -165,6 +173,27 @@ Metadata:
       embeds: []
       iscontainedinside:
         - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+    56d1d15c-fcec-4f79-a9c7-24b7fa52580e:
+      size:
+        width: 140
+        height: 140
+      position:
+        x: 760
+        'y': 520
+      z: 0
+      embeds:
+        - 04b66d69-9713-4036-bdfb-38d7f555c3d9
+    04b66d69-9713-4036-bdfb-38d7f555c3d9:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 780
+        'y': 550
+      z: 1
+      parent: 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+      iscontainedinside:
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
 Resources:
   EC2VPC192ZN:
     Type: 'AWS::EC2::VPC'
@@ -272,3 +301,22 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
+  EC2RT1BUC5:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: nat-rt
+      VpcId: !Ref EC2VPC192ZN
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+  EC2R1W4WH:
+    Type: 'AWS::EC2::Route'
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref EC2NG4592T
+      RouteTableId: !Ref EC2RT1BUC5
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 04b66d69-9713-4036-bdfb-38d7f555c3d9
