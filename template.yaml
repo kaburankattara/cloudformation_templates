@@ -34,6 +34,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -55,6 +56,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -66,6 +68,7 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -100,7 +103,7 @@ Metadata:
         id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       target:
         id: bd34ee15-e869-4768-ad73-acdfe134ec76
-      z: 2
+      z: 1
     9070326e-eb90-464f-b4df-d898155eb425:
       size:
         width: 60
@@ -115,8 +118,17 @@ Metadata:
         - bd34ee15-e869-4768-ad73-acdfe134ec76
       iscontainedinside:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
+    3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 130
+        'y': 80
+      z: 0
 Resources:
   EC2VPC192ZN:
     Type: 'AWS::EC2::VPC'
@@ -202,3 +214,12 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
+  EC2EIP4GQK5:
+    Type: 'AWS::EC2::EIP'
+    Properties:
+      Tags:
+        - Key: Name
+          Value: nat-ip
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
