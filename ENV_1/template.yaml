@@ -317,6 +317,10 @@ Parameters:
   PJPrefix:
     Type: String
 
+  SpaceChar:
+    Type: String
+    Default: "_"
+
   AvailabilityZone1:
     Type: String
     Default: ap-northeast-1a
@@ -383,7 +387,9 @@ Resources:
       CidrBlock: !Ref VpcCidrBlock
       Tags:
         - Key: Name
-          Value: !Ref VpcName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${VpcName}
+            - { VpcName: !Ref VpcName }
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
