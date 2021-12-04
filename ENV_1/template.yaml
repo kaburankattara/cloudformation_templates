@@ -56,6 +56,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -99,6 +101,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -110,6 +114,8 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -203,6 +209,8 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -262,6 +270,8 @@ Metadata:
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
     1c978c31-4068-4fd7-ac72-9e7b437406f1:
       size:
         width: 140
@@ -270,17 +280,6 @@ Metadata:
         x: 1010
         'y': 210
       z: 0
-      embeds:
-        - c3ab4283-5123-4410-bcf0-18c04238d04e
-    c3ab4283-5123-4410-bcf0-18c04238d04e:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 1030
-        'y': 240
-      z: 1
-      parent: 1c978c31-4068-4fd7-ac72-9e7b437406f1
       embeds: []
     b29cfcbd-5589-49db-8673-ebc2b2d34ac0:
       size:
@@ -436,27 +435,6 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 04b66d69-9713-4036-bdfb-38d7f555c3d9
-  EC2NA21X3F:
-    Type: 'AWS::EC2::NetworkAcl'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: network-acl
-      VpcId: !Ref EC2VPC192ZN
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 1c978c31-4068-4fd7-ac72-9e7b437406f1
-  EC2NA4L2FD:
-    Type: 'AWS::EC2::NetworkAclEntry'
-    Properties:
-      CidrBlock: 0.0.0.0/0
-      NetworkAclId: !Ref EC2NA21X3F
-      Protocol: -1
-      RuleAction: allow
-      RuleNumber: 100
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: c3ab4283-5123-4410-bcf0-18c04238d04e
   EC2SG59BA1:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
