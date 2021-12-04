@@ -377,6 +377,14 @@ Parameters:
     Type: String
     Default: nat-rt
 
+  DefaultSecurityGroup:
+    Type: String
+    Default: default-sg
+
+  SshSecurityGroup:
+    Type: String
+    Default: ssh-sg
+
 # ------------------------------------------------------------#
 # Resources
 # ------------------------------------------------------------#
@@ -400,7 +408,9 @@ Resources:
       CidrBlock: !Ref FrontSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: !Ref FrontSubnetName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${FrontSubnetName}
+            - { FrontSubnetName: !Ref FrontSubnetName }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -412,7 +422,9 @@ Resources:
       CidrBlock: !Ref BastionSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: !Ref BastionSubnetName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${BastionSubnetName}
+            - { BastionSubnetName: !Ref BastionSubnetName }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -424,7 +436,9 @@ Resources:
       CidrBlock: !Ref AppSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: !Ref AppSubnetName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${AppSubnetName}
+            - { AppSubnetName: !Ref AppSubnetName }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -434,7 +448,9 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref InternetGatewayName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${InternetGatewayName}
+            - { AppSubnetName: !Ref InternetGatewayName }
     Metadata:
       'AWS::CloudFormation::Designer':
         id: bd34ee15-e869-4768-ad73-acdfe134ec76
@@ -443,7 +459,9 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref FrontRTName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${FrontRTName}
+            - { FrontRTName: !Ref FrontRTName }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -472,7 +490,9 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref NatEIPName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${NatEIPName}
+            - { NatEIPName: !Ref NatEIPName }
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
@@ -485,7 +505,9 @@ Resources:
       SubnetId: !Ref EC2SIZL8
       Tags:
         - Key: Name
-          Value: !Ref NatGatewayName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${NatGatewayName}
+            - { NatGatewayName: !Ref NatGatewayName }
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
@@ -494,7 +516,9 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: !Ref NatRTName
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${NatRTName}
+            - { NatRTName: !Ref NatRTName }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -511,8 +535,12 @@ Resources:
   EC2SG59BA1:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: default2
-      GroupName: default2
+      GroupDescription: !Sub
+        - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+        - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
+      GroupName: !Sub
+                 - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+                 - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
           Description: outbound
@@ -526,7 +554,9 @@ Resources:
           ToPort: -1
       Tags:
         - Key: Name
-          Value: default-securityGroup
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+            - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -534,8 +564,12 @@ Resources:
   EC2SG2ZJDA:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
-      GroupDescription: ssh
-      GroupName: ssh
+      GroupDescription: !Sub
+        - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+        - { SshSecurityGroup: !Ref SshSecurityGroup }
+      GroupName: !Sub
+                 - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+                 - { SshSecurityGroup: !Ref SshSecurityGroup }
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
           Description: outbound
@@ -550,7 +584,9 @@ Resources:
           ToPort: 22
       Tags:
         - Key: Name
-          Value: ssh-securityGroup
+          Value: !Sub
+            - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+            - { SshSecurityGroup: !Ref SshSecurityGroup }
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
