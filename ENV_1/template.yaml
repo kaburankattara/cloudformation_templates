@@ -309,25 +309,92 @@ Metadata:
       target:
         id: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
       z: 2
+
+# ------------------------------------------------------------#
+# Input Parameters
+# ------------------------------------------------------------#
+Parameters:
+  PJPrefix:
+    Type: String
+
+  AvailabilityZone1:
+    Type: String
+    Default: ap-northeast-1a
+
+  VpcName:
+    Type: String
+    Default: vpc
+
+  VpcCidrBlock:
+    Type: String
+    Default: 192.168.16.0/20
+
+  FrontSubnetName:
+    Type: String
+    Default: front-Subnet
+
+  FrontSubnetCidrBlock:
+    Type: String
+    Default: 192.168.20.0/24
+
+  BastionSubnetName:
+    Type: String
+    Default: bastion-subnet
+
+  BastionSubnetCidrBlock:
+    Type: String
+    Default: 192.168.17.0/24
+
+  AppSubnetName:
+    Type: String
+    Default: app-subnet
+
+  AppSubnetCidrBlock:
+    Type: String
+    Default: 192.168.30.0/24
+
+  InternetGatewayName:
+    Type: String
+    Default: internetGateway
+
+  FrontRTName:
+    Type: String
+    Default: front-rt
+
+  NatEIPName:
+    Type: String
+    Default: nat-ip
+
+  NatGatewayName:
+    Type: String
+    Default: natGateway
+
+  NatRTName:
+    Type: String
+    Default: nat-rt
+
+# ------------------------------------------------------------#
+# Resources
+# ------------------------------------------------------------#
 Resources:
   EC2VPC192ZN:
     Type: 'AWS::EC2::VPC'
     Properties:
-      CidrBlock: 192.168.16.0/20
+      CidrBlock: !Ref VpcCidrBlock
       Tags:
         - Key: Name
-          Value: vpc
+          Value: !Ref VpcName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
   EC2SIZL8:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      AvailabilityZone: ap-northeast-1a
-      CidrBlock: 192.168.20.0/24
+      AvailabilityZone: !Ref AvailabilityZone1
+      CidrBlock: !Ref FrontSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: front-Subnet
+          Value: !Ref FrontSubnetName
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -335,11 +402,11 @@ Resources:
   EC2SAVZL:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      AvailabilityZone: ap-northeast-1a
-      CidrBlock: 192.168.17.0/24
+      AvailabilityZone: !Ref AvailabilityZone1
+      CidrBlock: !Ref BastionSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: bastion-subnet
+          Value: !Ref BastionSubnetName
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -347,11 +414,11 @@ Resources:
   EC2S1QJ9A:
     Type: 'AWS::EC2::Subnet'
     Properties:
-      AvailabilityZone: ap-northeast-1a
-      CidrBlock: 192.168.30.0/24
+      AvailabilityZone: !Ref AvailabilityZone1
+      CidrBlock: !Ref AppSubnetCidrBlock
       Tags:
         - Key: Name
-          Value: app-subnet
+          Value: !Ref AppSubnetName
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -361,7 +428,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: vpc-internetGateway
+          Value: !Ref InternetGatewayName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: bd34ee15-e869-4768-ad73-acdfe134ec76
@@ -370,7 +437,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: front-rt
+          Value: !Ref FrontRTName
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -399,7 +466,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: nat-ip
+          Value: !Ref NatEIPName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
@@ -412,7 +479,7 @@ Resources:
       SubnetId: !Ref EC2SIZL8
       Tags:
         - Key: Name
-          Value: natGateway
+          Value: !Ref NatGatewayName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
@@ -421,7 +488,7 @@ Resources:
     Properties:
       Tags:
         - Key: Name
-          Value: nat-rt
+          Value: !Ref NatRTName
       VpcId: !Ref EC2VPC192ZN
     Metadata:
       'AWS::CloudFormation::Designer':
