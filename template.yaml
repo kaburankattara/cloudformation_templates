@@ -55,6 +55,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 90
@@ -97,6 +98,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 180
@@ -108,6 +110,7 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -199,6 +202,7 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -244,6 +248,7 @@ Metadata:
       isassociatedwith:
         - 7c04435f-3d0f-4144-a9fb-accc8da2a353
       iscontainedinside:
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
@@ -512,4 +517,8 @@ Resources:
     Properties:
       RouteTableId: !Ref EC2RT3XQ8N
       SubnetId: !Ref EC2SAVZL
-
+  tpRouteTableAssociation01c:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref EC2RT1BUC5
+      SubnetId: !Ref EC2S1QJ9A
