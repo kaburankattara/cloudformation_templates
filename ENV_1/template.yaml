@@ -314,8 +314,36 @@ Metadata:
 # Input Parameters
 # ------------------------------------------------------------#
 Parameters:
-  PJPrefix:
+  SysName:
     Type: String
+
+  Env:
+    Type: String
+    AllowedValues: [ "Prod", "Stg", "dev" ]
+
+  NlayerPublic:
+    Type: String
+    Default: "public"
+
+  NlayerProtected:
+    Type: String
+    Default: "protected"
+
+  NlayerPrivate:
+    Type: String
+    Default: "private"
+
+  TypeApp:
+    Type: String
+    Default: "app"
+
+  TypeBastion:
+    Type: String
+    Default: "bastion"
+
+  TypeMail:
+    Type: String
+    Default: "mail"
 
   SpaceChar:
     Type: String
@@ -396,7 +424,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${VpcName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${VpcName}
             - { VpcName: !Ref VpcName }
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -409,7 +437,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${FrontSubnetName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSubnetName}
             - { FrontSubnetName: !Ref FrontSubnetName }
       VpcId: !Ref MyVPC
     Metadata:
@@ -423,7 +451,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${BastionSubnetName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${BastionSubnetName}
             - { BastionSubnetName: !Ref BastionSubnetName }
       VpcId: !Ref MyVPC
     Metadata:
@@ -437,7 +465,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${AppSubnetName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${AppSubnetName}
             - { AppSubnetName: !Ref AppSubnetName }
       VpcId: !Ref MyVPC
     Metadata:
@@ -449,7 +477,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${InternetGatewayName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${InternetGatewayName}
             - { AppSubnetName: !Ref InternetGatewayName }
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -460,7 +488,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${FrontRTName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${FrontRTName}
             - { FrontRTName: !Ref FrontRTName }
       VpcId: !Ref MyVPC
     Metadata:
@@ -491,7 +519,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${NatEIPName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatEIPName}
             - { NatEIPName: !Ref NatEIPName }
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -506,7 +534,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${NatGatewayName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatGatewayName}
             - { NatGatewayName: !Ref NatGatewayName }
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -517,7 +545,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${NatRTName}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatRTName}
             - { NatRTName: !Ref NatRTName }
       VpcId: !Ref MyVPC
     Metadata:
@@ -536,10 +564,10 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
-        - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+        - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
         - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
       GroupName: !Sub
-                 - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+                 - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
                  - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
@@ -555,7 +583,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
             - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
       VpcId: !Ref MyVPC
     Metadata:
@@ -565,10 +593,10 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
-        - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+        - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
         - { SshSecurityGroup: !Ref SshSecurityGroup }
       GroupName: !Sub
-                 - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+                 - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
                  - { SshSecurityGroup: !Ref SshSecurityGroup }
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
@@ -585,7 +613,7 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
+            - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
             - { SshSecurityGroup: !Ref SshSecurityGroup }
       VpcId: !Ref MyVPC
     Metadata:
