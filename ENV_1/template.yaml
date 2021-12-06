@@ -319,7 +319,7 @@ Parameters:
 
   SpaceChar:
     Type: String
-    Default: "_"
+    Default: "-"
 
   AvailabilityZone1:
     Type: String
@@ -389,7 +389,7 @@ Parameters:
 # Resources
 # ------------------------------------------------------------#
 Resources:
-  EC2VPC192ZN:
+  MyVPC:
     Type: 'AWS::EC2::VPC'
     Properties:
       CidrBlock: !Ref VpcCidrBlock
@@ -401,7 +401,7 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-  EC2SIZL8:
+  MyFrontSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
@@ -411,11 +411,11 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${FrontSubnetName}
             - { FrontSubnetName: !Ref FrontSubnetName }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-  EC2SAVZL:
+  MyBastionSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
@@ -425,11 +425,11 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${BastionSubnetName}
             - { BastionSubnetName: !Ref BastionSubnetName }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-  EC2S1QJ9A:
+  MyAppSubnet:
     Type: 'AWS::EC2::Subnet'
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
@@ -439,11 +439,11 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${AppSubnetName}
             - { AppSubnetName: !Ref AppSubnetName }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-  EC2IG5366V:
+  MyInternetGateway:
     Type: 'AWS::EC2::InternetGateway'
     Properties:
       Tags:
@@ -454,7 +454,7 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: bd34ee15-e869-4768-ad73-acdfe134ec76
-  EC2RT3XQ8N:
+  MyFrontRT:
     Type: 'AWS::EC2::RouteTable'
     Properties:
       Tags:
@@ -462,30 +462,30 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${FrontRTName}
             - { FrontRTName: !Ref FrontRTName }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: d105f700-9cb3-4f0e-a964-feb1a5b7c306
-  EC2RP2JG:
+  MyGatewayToInternet:
     Type: 'AWS::EC2::Route'
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 9070326e-eb90-464f-b4df-d898155eb425
-    DependsOn: GatewayToInternet
+    DependsOn: MyVPCGatewayAttachment
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref EC2IG5366V
-      RouteTableId: !Ref EC2RT3XQ8N
-  GatewayToInternet:
+      GatewayId: !Ref MyInternetGateway
+      RouteTableId: !Ref MyFrontRT
+  MyVPCGatewayAttachment:
     Type: 'AWS::EC2::VPCGatewayAttachment'
-    DependsOn: EC2IG5366V
+    DependsOn: MyInternetGateway
     Properties:
-      VpcId: !Ref EC2VPC192ZN
-      InternetGatewayId: !Ref EC2IG5366V
+      VpcId: !Ref MyVPC
+      InternetGatewayId: !Ref MyInternetGateway
     Metadata:
       'AWS::CloudFormation::Designer':
         id: c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
-  EC2EIP4GQK5:
+  MyNatEIP:
     Type: 'AWS::EC2::EIP'
     Properties:
       Tags:
@@ -496,13 +496,13 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
-  EC2NG4592T:
+  MyNatGateway:
     Type: 'AWS::EC2::NatGateway'
-    DependsOn: EC2EIP4GQK5
+    DependsOn: MyNatEIP
     Properties:
-      AllocationId: !GetAtt EC2EIP4GQK5.AllocationId
+      AllocationId: !GetAtt MyNatEIP.AllocationId
       ConnectivityType: public
-      SubnetId: !Ref EC2SIZL8
+      SubnetId: !Ref MyFrontSubnet
       Tags:
         - Key: Name
           Value: !Sub
@@ -511,7 +511,7 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
-  EC2RT1BUC5:
+  MyNatRT:
     Type: 'AWS::EC2::RouteTable'
     Properties:
       Tags:
@@ -519,20 +519,20 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${NatRTName}
             - { NatRTName: !Ref NatRTName }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-  EC2R1W4WH:
+  MyNatGatewayToInternet:
     Type: 'AWS::EC2::Route'
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref EC2NG4592T
-      RouteTableId: !Ref EC2RT1BUC5
+      NatGatewayId: !Ref MyNatGateway
+      RouteTableId: !Ref MyNatRT
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 04b66d69-9713-4036-bdfb-38d7f555c3d9
-  EC2SG59BA1:
+  MyDefaultSG:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
@@ -557,11 +557,11 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${DefaultSecurityGroup}
             - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b29cfcbd-5589-49db-8673-ebc2b2d34ac0
-  EC2SG2ZJDA:
+  MySshSG:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
@@ -587,25 +587,25 @@ Resources:
           Value: !Sub
             - ${PJPrefix}${SpaceChar}${SshSecurityGroup}
             - { SshSecurityGroup: !Ref SshSecurityGroup }
-      VpcId: !Ref EC2VPC192ZN
+      VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 22d7ead2-0b16-4370-95da-3288cb01dcd5
   tpRouteTableAssociation01a:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
-      RouteTableId: !Ref EC2RT3XQ8N
-      SubnetId: !Ref EC2SIZL8
+      RouteTableId: !Ref MyFrontRT
+      SubnetId: !Ref MyFrontSubnet
     Metadata:
       'AWS::CloudFormation::Designer':
         id: fb71a39e-59fd-497b-8b8d-832d8ac02244
   tpRouteTableAssociation01b:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
-      RouteTableId: !Ref EC2RT3XQ8N
-      SubnetId: !Ref EC2SAVZL
+      RouteTableId: !Ref MyFrontRT
+      SubnetId: !Ref MyBastionSubnet
   tpRouteTableAssociation01c:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
-      RouteTableId: !Ref EC2RT1BUC5
-      SubnetId: !Ref EC2S1QJ9A
+      RouteTableId: !Ref MyNatRT
+      SubnetId: !Ref MyAppSubnet
