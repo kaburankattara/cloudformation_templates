@@ -15,8 +15,8 @@ Metadata:
         - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
     ea0c0225-e068-4d95-9dd9-77645fa1fcc1:
       size:
-        width: 90
-        height: 90
+        width: 110
+        height: 100
       position:
         x: 180
         'y': 240
@@ -24,6 +24,9 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -60,15 +63,19 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
-        width: 90
-        height: 90
+        width: 110
+        height: 100
       position:
-        x: 270
+        x: 300
         'y': 240
       z: 2
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds: []
+      embeds:
+        - 79161164-d203-433e-a689-8b542cafae37
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -105,7 +112,7 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
-        width: 180
+        width: 230
         height: 120
       position:
         x: 180
@@ -114,6 +121,9 @@ Metadata:
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
       embeds: []
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -211,6 +221,9 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -272,15 +285,9 @@ Metadata:
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-    1c978c31-4068-4fd7-ac72-9e7b437406f1:
-      size:
-        width: 140
-        height: 140
-      position:
-        x: 1010
-        'y': 210
-      z: 0
-      embeds: []
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
     b29cfcbd-5589-49db-8673-ebc2b2d34ac0:
       size:
         width: 60
@@ -309,113 +316,97 @@ Metadata:
       target:
         id: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
       z: 2
-
-# ------------------------------------------------------------#
-# Input Parameters
-# ------------------------------------------------------------#
+    79161164-d203-433e-a689-8b542cafae37:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 320
+        'y': 270
+      z: 3
+      parent: 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+      embeds: []
+      iscontainedinside:
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
 Parameters:
   SysName:
     Type: String
-
   Env:
     Type: String
-    AllowedValues: [ "Prod", "Stg", "dev" ]
-
+    AllowedValues:
+      - Prod
+      - Stg
+      - dev
   NlayerPublic:
     Type: String
-    Default: "public"
-
+    Default: public
   NlayerProtected:
     Type: String
-    Default: "protected"
-
+    Default: protected
   NlayerPrivate:
     Type: String
-    Default: "private"
-
+    Default: private
   TypeApp:
     Type: String
-    Default: "app"
-
+    Default: app
   TypeBastion:
     Type: String
-    Default: "bastion"
-
+    Default: bastion
   TypeMail:
     Type: String
-    Default: "mail"
-
+    Default: mail
   SpaceChar:
     Type: String
-    Default: "-"
-
+    Default: '-'
   AvailabilityZone1:
     Type: String
     Default: ap-northeast-1a
-
   VpcName:
     Type: String
     Default: vpc
-
   VpcCidrBlock:
     Type: String
     Default: 192.168.16.0/20
-
   FrontSubnetName:
     Type: String
     Default: front-Subnet
-
   FrontSubnetCidrBlock:
     Type: String
     Default: 192.168.20.0/24
-
   BastionSubnetName:
     Type: String
     Default: bastion-subnet
-
   BastionSubnetCidrBlock:
     Type: String
     Default: 192.168.17.0/24
-
   AppSubnetName:
     Type: String
     Default: app-subnet
-
   AppSubnetCidrBlock:
     Type: String
     Default: 192.168.30.0/24
-
   InternetGatewayName:
     Type: String
     Default: internetGateway
-
   FrontRTName:
     Type: String
     Default: front-rt
-
   NatEIPName:
     Type: String
     Default: nat-ip
-
   NatGatewayName:
     Type: String
     Default: natGateway
-
   NatRTName:
     Type: String
     Default: nat-rt
-
   DefaultSecurityGroup:
     Type: String
     Default: default-sg
-
   SshSecurityGroup:
     Type: String
     Default: ssh-sg
-
-# ------------------------------------------------------------#
-# Resources
-# ------------------------------------------------------------#
 Resources:
   MyVPC:
     Type: 'AWS::EC2::VPC'
@@ -424,8 +415,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${VpcName}
-            - { VpcName: !Ref VpcName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${VpcName}'
+            - VpcName: !Ref VpcName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -437,8 +428,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSubnetName}
-            - { FrontSubnetName: !Ref FrontSubnetName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSubnetName}'
+            - FrontSubnetName: !Ref FrontSubnetName
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -451,8 +442,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${BastionSubnetName}
-            - { BastionSubnetName: !Ref BastionSubnetName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${BastionSubnetName}'
+            - BastionSubnetName: !Ref BastionSubnetName
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -465,8 +456,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${AppSubnetName}
-            - { AppSubnetName: !Ref AppSubnetName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSubnetName}'
+            - AppSubnetName: !Ref AppSubnetName
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -477,8 +468,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${InternetGatewayName}
-            - { AppSubnetName: !Ref InternetGatewayName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${InternetGatewayName}'
+            - AppSubnetName: !Ref InternetGatewayName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: bd34ee15-e869-4768-ad73-acdfe134ec76
@@ -488,8 +479,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${FrontRTName}
-            - { FrontRTName: !Ref FrontRTName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontRTName}'
+            - FrontRTName: !Ref FrontRTName
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -519,8 +510,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatEIPName}
-            - { NatEIPName: !Ref NatEIPName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatEIPName}'
+            - NatEIPName: !Ref NatEIPName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
@@ -534,8 +525,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatGatewayName}
-            - { NatGatewayName: !Ref NatGatewayName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatGatewayName}'
+            - NatGatewayName: !Ref NatGatewayName
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
@@ -545,8 +536,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${NatRTName}
-            - { NatRTName: !Ref NatRTName }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatRTName}'
+            - NatRTName: !Ref NatRTName
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -564,11 +555,11 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
-        - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
-        - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
+        - DefaultSecurityGroup: !Ref DefaultSecurityGroup
       GroupName: !Sub
-                 - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
-                 - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
+        - DefaultSecurityGroup: !Ref DefaultSecurityGroup
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
           Description: outbound
@@ -583,8 +574,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}
-            - { DefaultSecurityGroup: !Ref DefaultSecurityGroup }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
+            - DefaultSecurityGroup: !Ref DefaultSecurityGroup
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -593,11 +584,11 @@ Resources:
     Type: 'AWS::EC2::SecurityGroup'
     Properties:
       GroupDescription: !Sub
-        - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
-        - { SshSecurityGroup: !Ref SshSecurityGroup }
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
+        - SshSecurityGroup: !Ref SshSecurityGroup
       GroupName: !Sub
-                 - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
-                 - { SshSecurityGroup: !Ref SshSecurityGroup }
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
+        - SshSecurityGroup: !Ref SshSecurityGroup
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
           Description: outbound
@@ -613,8 +604,8 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub
-            - ${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}
-            - { SshSecurityGroup: !Ref SshSecurityGroup }
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
+            - SshSecurityGroup: !Ref SshSecurityGroup
       VpcId: !Ref MyVPC
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -637,3 +628,21 @@ Resources:
     Properties:
       RouteTableId: !Ref MyNatRT
       SubnetId: !Ref MyAppSubnet
+  MyBastionInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: 'ami-0218d08a1f9dac831'
+      InstanceType: t2.micro
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyBastionSubnet
+          GroupSet:
+            - !Ref MySshSG
+          AssociatePublicIpAddress: true
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeBastion}'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 79161164-d203-433e-a689-8b542cafae37
