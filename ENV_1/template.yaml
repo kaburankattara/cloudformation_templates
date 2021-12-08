@@ -22,8 +22,12 @@ Metadata:
         'y': 240
       z: 2
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds: []
+      embeds:
+        - befd8ac6-111c-4a50-b555-6b714689c2f8
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -110,6 +114,9 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 230
@@ -119,8 +126,12 @@ Metadata:
         'y': 360
       z: 2
       parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds: []
+      embeds:
+        - 3756e051-7ac0-46e9-a265-bbc29575982a
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -224,6 +235,9 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -288,6 +302,9 @@ Metadata:
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
     b29cfcbd-5589-49db-8673-ebc2b2d34ac0:
       size:
         width: 60
@@ -329,6 +346,34 @@ Metadata:
       iscontainedinside:
         - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
         - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+    3756e051-7ac0-46e9-a265-bbc29575982a:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 210
+        'y': 390
+      z: 3
+      parent: 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+      embeds: []
+      iscontainedinside:
+        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+    befd8ac6-111c-4a50-b555-6b714689c2f8:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 210
+        'y': 270
+      z: 3
+      parent: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+      iscontainedinside:
+        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
 Parameters:
   SysName:
     Type: String
@@ -347,6 +392,9 @@ Parameters:
   NlayerPrivate:
     Type: String
     Default: private
+  TypeFront:
+    Type: String
+    Default: front
   TypeApp:
     Type: String
     Default: app
@@ -370,7 +418,7 @@ Parameters:
     Default: 192.168.16.0/20
   FrontSubnetName:
     Type: String
-    Default: front-Subnet
+    Default: front-subnet
   FrontSubnetCidrBlock:
     Type: String
     Default: 192.168.20.0/24
@@ -631,7 +679,7 @@ Resources:
   MyBastionInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
-      ImageId: 'ami-0218d08a1f9dac831'
+      ImageId: ami-0218d08a1f9dac831
       InstanceType: t2.micro
       KeyName: cassandra2
       NetworkInterfaces:
@@ -646,3 +694,39 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 79161164-d203-433e-a689-8b542cafae37
+  MyAppInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-0218d08a1f9dac831
+      InstanceType: t2.micro
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyAppSubnet
+          GroupSet:
+            - !Ref MySshSG
+          AssociatePublicIpAddress: false
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeApp}'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3756e051-7ac0-46e9-a265-bbc29575982a
+  MyFrontInstance:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-0218d08a1f9dac831
+      InstanceType: t2.micro
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyFrontSubnet
+          GroupSet:
+            - !Ref MySshSG
+          AssociatePublicIpAddress: true
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeFront}'
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: befd8ac6-111c-4a50-b555-6b714689c2f8
