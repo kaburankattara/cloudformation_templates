@@ -65,6 +65,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     67522619-f7a1-4edc-bb0c-ed4d2184ccca:
       size:
         width: 110
@@ -117,6 +119,8 @@ Metadata:
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
     1bf6ee28-27f4-4c9e-bb30-8d665e384699:
       size:
         width: 230
@@ -129,6 +133,8 @@ Metadata:
       embeds:
         - 3756e051-7ac0-46e9-a265-bbc29575982a
       iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
         - b5ad77ed-6488-4e09-ab24-0be7fbd83611
@@ -238,6 +244,8 @@ Metadata:
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
         - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
+        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
       dependson:
         - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
     3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
@@ -305,6 +313,8 @@ Metadata:
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
         - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
+        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
     b29cfcbd-5589-49db-8673-ebc2b2d34ac0:
       size:
         width: 60
@@ -349,6 +359,8 @@ Metadata:
         - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
         - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
         - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
+        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
     3756e051-7ac0-46e9-a265-bbc29575982a:
       size:
         width: 60
@@ -363,6 +375,8 @@ Metadata:
         - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
         - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
         - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
+        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
     befd8ac6-111c-4a50-b555-6b714689c2f8:
       size:
         width: 60
@@ -372,8 +386,30 @@ Metadata:
         'y': 270
       z: 3
       parent: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+      embeds: []
       iscontainedinside:
         - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
+    bb964604-fa4c-4a56-817b-95f6c9c5dd82:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 100
+        'y': 860
+      z: 0
+      embeds: []
+      iscontainedinside:
+        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
+    3ffaea0a-f917-4555-b7a2-a86895f0d9f0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 20
+        'y': 860
+      z: 0
 Parameters:
   SysName:
     Type: String
@@ -418,7 +454,7 @@ Parameters:
     Default: 192.168.16.0/20
   FrontSubnetName:
     Type: String
-    Default: front-subnet
+    Default: front-Subnet
   FrontSubnetCidrBlock:
     Type: String
     Default: 192.168.20.0/24
@@ -455,6 +491,12 @@ Parameters:
   SshSecurityGroup:
     Type: String
     Default: ssh-sg
+  FrontSecurityGroup:
+    Type: String
+    Default: front-sg
+  AppSecurityGroup:
+    Type: String
+    Default: app-sg
 Resources:
   MyVPC:
     Type: 'AWS::EC2::VPC'
@@ -658,6 +700,81 @@ Resources:
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 22d7ead2-0b16-4370-95da-3288cb01dcd5
+  MyFrontSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Sub
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
+        - FrontSecurityGroup: !Ref FrontSecurityGroup
+      GroupName: !Sub
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
+        - FrontSecurityGroup: !Ref FrontSecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+        - CidrIp: !Ref BastionSubnetCidrBlock
+          Description: inbound
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
+            - FrontSecurityGroup: !Ref FrontSecurityGroup
+      VpcId: !Ref MyVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: bb964604-fa4c-4a56-817b-95f6c9c5dd82
+  MyAppSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Sub
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
+        - AppSecurityGroup: !Ref AppSecurityGroup
+      GroupName: !Sub
+        - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
+        - AppSecurityGroup: !Ref AppSecurityGroup
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: !Ref FrontSubnetCidrBlock
+          Description: inbound
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: !Ref FrontSubnetCidrBlock
+          Description: inbound
+          FromPort: 8009
+          IpProtocol: tcp
+          ToPort: 8009
+        - CidrIp: !Ref BastionSubnetCidrBlock
+          Description: inbound
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: !Sub
+            - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
+            - AppSecurityGroup: !Ref AppSecurityGroup
+      VpcId: !Ref MyVPC
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 3ffaea0a-f917-4555-b7a2-a86895f0d9f0
   tpRouteTableAssociation01a:
     Type: 'AWS::EC2::SubnetRouteTableAssociation'
     Properties:
@@ -703,7 +820,7 @@ Resources:
       NetworkInterfaces:
         - SubnetId: !Ref MyAppSubnet
           GroupSet:
-            - !Ref MySshSG
+            - !Ref MyAppSG
           AssociatePublicIpAddress: false
           DeviceIndex: 0
       Tags:
@@ -721,7 +838,7 @@ Resources:
       NetworkInterfaces:
         - SubnetId: !Ref MyFrontSubnet
           GroupSet:
-            - !Ref MySshSG
+            - !Ref MyFrontSG
           AssociatePublicIpAddress: true
           DeviceIndex: 0
       Tags:
