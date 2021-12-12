@@ -1,415 +1,4 @@
-AWSTemplateFormatVersion: 2010-09-09
-Metadata:
-  'AWS::CloudFormation::Designer':
-    b5ad77ed-6488-4e09-ab24-0be7fbd83611:
-      size:
-        width: 570
-        height: 570
-      position:
-        x: 60
-        'y': 210
-      z: 1
-      embeds:
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-    ea0c0225-e068-4d95-9dd9-77645fa1fcc1:
-      size:
-        width: 110
-        height: 100
-      position:
-        x: 180
-        'y': 240
-      z: 2
-      parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds:
-        - befd8ac6-111c-4a50-b555-6b714689c2f8
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    67522619-f7a1-4edc-bb0c-ed4d2184ccca:
-      size:
-        width: 110
-        height: 100
-      position:
-        x: 300
-        'y': 240
-      z: 2
-      parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds:
-        - 79161164-d203-433e-a689-8b542cafae37
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    1bf6ee28-27f4-4c9e-bb30-8d665e384699:
-      size:
-        width: 230
-        height: 120
-      position:
-        x: 180
-        'y': 360
-      z: 2
-      parent: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      embeds:
-        - 3756e051-7ac0-46e9-a265-bbc29575982a
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    bd34ee15-e869-4768-ad73-acdfe134ec76:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 320
-        'y': 80
-      z: 0
-      embeds: []
-    d105f700-9cb3-4f0e-a964-feb1a5b7c306:
-      size:
-        width: 240
-        height: 240
-      position:
-        x: 750
-        'y': 210
-      z: 1
-      embeds:
-        - 9070326e-eb90-464f-b4df-d898155eb425
-    c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82:
-      source:
-        id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-      target:
-        id: bd34ee15-e869-4768-ad73-acdfe134ec76
-      z: 1
-    9070326e-eb90-464f-b4df-d898155eb425:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 780
-        'y': 270
-      z: 2
-      parent: d105f700-9cb3-4f0e-a964-feb1a5b7c306
-      embeds: []
-      isassociatedwith:
-        - bd34ee15-e869-4768-ad73-acdfe134ec76
-      iscontainedinside:
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-        - d105f700-9cb3-4f0e-a964-feb1a5b7c306
-      dependson:
-        - c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
-    3f42eaf3-b965-46b4-a6c1-acde35f5d9fd:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 130
-        'y': 80
-      z: 0
-      embeds: []
-    7c04435f-3d0f-4144-a9fb-accc8da2a353:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 210
-        'y': 80
-      z: 0
-      embeds: []
-      iscontainedinside:
-        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-    56d1d15c-fcec-4f79-a9c7-24b7fa52580e:
-      size:
-        width: 140
-        height: 140
-      position:
-        x: 760
-        'y': 520
-      z: 0
-      embeds:
-        - 04b66d69-9713-4036-bdfb-38d7f555c3d9
-    04b66d69-9713-4036-bdfb-38d7f555c3d9:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 780
-        'y': 550
-      z: 1
-      parent: 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-      embeds: []
-      isassociatedwith:
-        - 7c04435f-3d0f-4144-a9fb-accc8da2a353
-      iscontainedinside:
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-        - 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-    b29cfcbd-5589-49db-8673-ebc2b2d34ac0:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 210
-        'y': 860
-      z: 0
-      embeds: []
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    22d7ead2-0b16-4370-95da-3288cb01dcd5:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 410
-        'y': 860
-      z: 0
-      embeds: []
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    fb71a39e-59fd-497b-8b8d-832d8ac02244:
-      source:
-        id: d105f700-9cb3-4f0e-a964-feb1a5b7c306
-      target:
-        id: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-      z: 2
-    79161164-d203-433e-a689-8b542cafae37:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 320
-        'y': 270
-      z: 3
-      parent: 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-      embeds: []
-      iscontainedinside:
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-        - 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-    3756e051-7ac0-46e9-a265-bbc29575982a:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 210
-        'y': 390
-      z: 3
-      parent: 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-      embeds: []
-      iscontainedinside:
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-        - 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-    befd8ac6-111c-4a50-b555-6b714689c2f8:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 210
-        'y': 270
-      z: 3
-      parent: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-      embeds: []
-      iscontainedinside:
-        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-        - ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-    bb964604-fa4c-4a56-817b-95f6c9c5dd82:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 100
-        'y': 860
-      z: 0
-      embeds: []
-      iscontainedinside:
-        - b5ad77ed-6488-4e09-ab24-0be7fbd83611
-    3ffaea0a-f917-4555-b7a2-a86895f0d9f0:
-      size:
-        width: 60
-        height: 60
-      position:
-        x: 20
-        'y': 860
-      z: 0
+AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
   SysName:
     Type: String
@@ -498,352 +87,116 @@ Parameters:
     Type: String
     Default: app-sg
 Resources:
-  MyVPC:
-    Type: 'AWS::EC2::VPC'
+  VPC:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      CidrBlock: !Ref VpcCidrBlock
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${VpcName}'
-            - VpcName: !Ref VpcName
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: b5ad77ed-6488-4e09-ab24-0be7fbd83611
-  MyFrontSubnet:
-    Type: 'AWS::EC2::Subnet'
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/vpc.yaml
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
+        AvailabilityZone1: !Ref AvailabilityZone1
+        VpcName: !Ref VpcName
+        VpcCidrBlock: !Ref VpcCidrBlock
+        FrontSubnetName: !Ref FrontSubnetName
+        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
+        BastionSubnetName: !Ref BastionSubnetName
+        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+        AppSubnetName: !Ref AppSubnetName
+        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
+        InternetGatewayName: !Ref InternetGatewayName
+        FrontRTName: !Ref FrontRTName
+        NatEIPName: !Ref NatEIPName
+        NatGatewayName: !Ref NatGatewayName
+        NatRTName: !Ref NatRTName
+        DefaultSecurityGroup: !Ref DefaultSecurityGroup
+        SshSecurityGroup: !Ref SshSecurityGroup
+        FrontSecurityGroup: !Ref FrontSecurityGroup
+        AppSecurityGroup: !Ref AppSecurityGroup
+
+  Instance:
+    Type: AWS::CloudFormation::Stack
     Properties:
-      AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref FrontSubnetCidrBlock
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSubnetName}'
-            - FrontSubnetName: !Ref FrontSubnetName
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: ea0c0225-e068-4d95-9dd9-77645fa1fcc1
-  MyBastionSubnet:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref BastionSubnetCidrBlock
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${BastionSubnetName}'
-            - BastionSubnetName: !Ref BastionSubnetName
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 67522619-f7a1-4edc-bb0c-ed4d2184ccca
-  MyAppSubnet:
-    Type: 'AWS::EC2::Subnet'
-    Properties:
-      AvailabilityZone: !Ref AvailabilityZone1
-      CidrBlock: !Ref AppSubnetCidrBlock
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSubnetName}'
-            - AppSubnetName: !Ref AppSubnetName
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 1bf6ee28-27f4-4c9e-bb30-8d665e384699
-  MyInternetGateway:
-    Type: 'AWS::EC2::InternetGateway'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${InternetGatewayName}'
-            - AppSubnetName: !Ref InternetGatewayName
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: bd34ee15-e869-4768-ad73-acdfe134ec76
-  MyFrontRT:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontRTName}'
-            - FrontRTName: !Ref FrontRTName
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: d105f700-9cb3-4f0e-a964-feb1a5b7c306
-  MyGatewayToInternet:
-    Type: 'AWS::EC2::Route'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 9070326e-eb90-464f-b4df-d898155eb425
-    DependsOn: MyVPCGatewayAttachment
-    Properties:
-      DestinationCidrBlock: 0.0.0.0/0
-      GatewayId: !Ref MyInternetGateway
-      RouteTableId: !Ref MyFrontRT
-  MyVPCGatewayAttachment:
-    Type: 'AWS::EC2::VPCGatewayAttachment'
-    DependsOn: MyInternetGateway
-    Properties:
-      VpcId: !Ref MyVPC
-      InternetGatewayId: !Ref MyInternetGateway
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: c61e4f2b-5bb9-4d2e-b536-dfe665cd0b82
-  MyNatEIP:
-    Type: 'AWS::EC2::EIP'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatEIPName}'
-            - NatEIPName: !Ref NatEIPName
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 3f42eaf3-b965-46b4-a6c1-acde35f5d9fd
-  MyNatGateway:
-    Type: 'AWS::EC2::NatGateway'
-    DependsOn: MyNatEIP
-    Properties:
-      AllocationId: !GetAtt MyNatEIP.AllocationId
-      ConnectivityType: public
-      SubnetId: !Ref MyFrontSubnet
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatGatewayName}'
-            - NatGatewayName: !Ref NatGatewayName
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 7c04435f-3d0f-4144-a9fb-accc8da2a353
-  MyNatRT:
-    Type: 'AWS::EC2::RouteTable'
-    Properties:
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${NatRTName}'
-            - NatRTName: !Ref NatRTName
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 56d1d15c-fcec-4f79-a9c7-24b7fa52580e
-  MyNatGatewayToInternet:
-    Type: 'AWS::EC2::Route'
-    Properties:
-      DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref MyNatGateway
-      RouteTableId: !Ref MyNatRT
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 04b66d69-9713-4036-bdfb-38d7f555c3d9
-  MyDefaultSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
-        - DefaultSecurityGroup: !Ref DefaultSecurityGroup
-      GroupName: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
-        - DefaultSecurityGroup: !Ref DefaultSecurityGroup
-      SecurityGroupEgress:
-        - CidrIp: 0.0.0.0/0
-          Description: outbound
-          FromPort: -1
-          IpProtocol: -1
-          ToPort: -1
-      SecurityGroupIngress:
-        - Description: inbound
-          FromPort: -1
-          IpProtocol: -1
-          ToPort: -1
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
-            - DefaultSecurityGroup: !Ref DefaultSecurityGroup
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: b29cfcbd-5589-49db-8673-ebc2b2d34ac0
-  MySshSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
-        - SshSecurityGroup: !Ref SshSecurityGroup
-      GroupName: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
-        - SshSecurityGroup: !Ref SshSecurityGroup
-      SecurityGroupEgress:
-        - CidrIp: 0.0.0.0/0
-          Description: outbound
-          FromPort: -1
-          IpProtocol: -1
-          ToPort: -1
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          Description: inbound
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
-            - SshSecurityGroup: !Ref SshSecurityGroup
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 22d7ead2-0b16-4370-95da-3288cb01dcd5
-  MyFrontSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
-        - FrontSecurityGroup: !Ref FrontSecurityGroup
-      GroupName: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
-        - FrontSecurityGroup: !Ref FrontSecurityGroup
-      SecurityGroupEgress:
-        - CidrIp: 0.0.0.0/0
-          Description: outbound
-          FromPort: -1
-          IpProtocol: -1
-          ToPort: -1
-      SecurityGroupIngress:
-        - CidrIp: 0.0.0.0/0
-          Description: inbound
-          FromPort: 443
-          IpProtocol: tcp
-          ToPort: 443
-        - CidrIp: !Ref BastionSubnetCidrBlock
-          Description: inbound
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
-            - FrontSecurityGroup: !Ref FrontSecurityGroup
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: bb964604-fa4c-4a56-817b-95f6c9c5dd82
-  MyAppSG:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
-        - AppSecurityGroup: !Ref AppSecurityGroup
-      GroupName: !Sub
-        - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
-        - AppSecurityGroup: !Ref AppSecurityGroup
-      SecurityGroupEgress:
-        - CidrIp: 0.0.0.0/0
-          Description: outbound
-          FromPort: -1
-          IpProtocol: -1
-          ToPort: -1
-      SecurityGroupIngress:
-        - CidrIp: !Ref FrontSubnetCidrBlock
-          Description: inbound
-          FromPort: 80
-          IpProtocol: tcp
-          ToPort: 80
-        - CidrIp: !Ref FrontSubnetCidrBlock
-          Description: inbound
-          FromPort: 8009
-          IpProtocol: tcp
-          ToPort: 8009
-        - CidrIp: !Ref BastionSubnetCidrBlock
-          Description: inbound
-          FromPort: 22
-          IpProtocol: tcp
-          ToPort: 22
-      Tags:
-        - Key: Name
-          Value: !Sub
-            - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
-            - AppSecurityGroup: !Ref AppSecurityGroup
-      VpcId: !Ref MyVPC
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 3ffaea0a-f917-4555-b7a2-a86895f0d9f0
-  tpRouteTableAssociation01a:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref MyFrontRT
-      SubnetId: !Ref MyFrontSubnet
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: fb71a39e-59fd-497b-8b8d-832d8ac02244
-  tpRouteTableAssociation01b:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref MyFrontRT
-      SubnetId: !Ref MyBastionSubnet
-  tpRouteTableAssociation01c:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
-    Properties:
-      RouteTableId: !Ref MyNatRT
-      SubnetId: !Ref MyAppSubnet
-  MyBastionInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      ImageId: ami-0218d08a1f9dac831
-      InstanceType: t2.micro
-      KeyName: cassandra2
-      NetworkInterfaces:
-        - SubnetId: !Ref MyBastionSubnet
-          GroupSet:
-            - !Ref MySshSG
-          AssociatePublicIpAddress: true
-          DeviceIndex: 0
-      Tags:
-        - Key: Name
-          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeBastion}'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 79161164-d203-433e-a689-8b542cafae37
-  MyAppInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      ImageId: ami-0218d08a1f9dac831
-      InstanceType: t2.micro
-      KeyName: cassandra2
-      NetworkInterfaces:
-        - SubnetId: !Ref MyAppSubnet
-          GroupSet:
-            - !Ref MyAppSG
-          AssociatePublicIpAddress: false
-          DeviceIndex: 0
-      Tags:
-        - Key: Name
-          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeApp}'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: 3756e051-7ac0-46e9-a265-bbc29575982a
-  MyFrontInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      ImageId: ami-0218d08a1f9dac831
-      InstanceType: t2.micro
-      KeyName: cassandra2
-      NetworkInterfaces:
-        - SubnetId: !Ref MyFrontSubnet
-          GroupSet:
-            - !Ref MyFrontSG
-          AssociatePublicIpAddress: true
-          DeviceIndex: 0
-      Tags:
-        - Key: Name
-          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeFront}'
-    Metadata:
-      'AWS::CloudFormation::Designer':
-        id: befd8ac6-111c-4a50-b555-6b714689c2f8
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/ec2.yaml
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        TypeFront: !Ref TypeFront
+        TypeApp: !Ref TypeApp
+        TypeBastion: !Ref TypeBastion
+        SpaceChar: !Ref SpaceChar
+        AvailabilityZone1: !Ref AvailabilityZone1
+        VpcName: !Ref VpcName
+        VpcCidrBlock: !Ref VpcCidrBlock
+        FrontSubnetName: !Ref FrontSubnetName
+        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
+        BastionSubnetName: !Ref BastionSubnetName
+        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+        AppSubnetName: !Ref AppSubnetName
+        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
+        InternetGatewayName: !Ref InternetGatewayName
+        FrontRTName: !Ref FrontRTName
+        NatEIPName: !Ref NatEIPName
+        NatGatewayName: !Ref NatGatewayName
+        NatRTName: !Ref NatRTName
+        DefaultSecurityGroup: !Ref DefaultSecurityGroup
+        SshSecurityGroup: !Ref SshSecurityGroup
+        FrontSecurityGroup: !Ref FrontSecurityGroup
+        AppSecurityGroup: !Ref AppSecurityGroup
+
+        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId # !GetAtt で受け渡す
+        MySshSGId: !GetAtt VPC.Outputs.MySshSGId # !GetAtt で受け渡す
+        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId # !GetAtt で受け渡す
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId # !GetAtt で受け渡す
+        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
+        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
+
+Outputs:
+  SysName:
+    Value: !Ref SysName
+  Env:
+    Value: !Ref Env
+  TypeFront:
+    Value: !Ref TypeFront
+  TypeApp:
+    Value: !Ref TypeApp
+  TypeBastion:
+    Value: !Ref TypeBastion
+  SpaceChar:
+    Value: !Ref SpaceChar
+  AvailabilityZone1:
+    Value: !Ref AvailabilityZone1
+  VpcName:
+    Value: !Ref VpcName
+  VpcCidrBlock:
+    Value: !Ref VpcCidrBlock
+  FrontSubnetName:
+    Value: !Ref FrontSubnetName
+  FrontSubnetCidrBlock:
+    Value: !Ref FrontSubnetCidrBlock
+  BastionSubnetName:
+    Value: !Ref BastionSubnetName
+  BastionSubnetCidrBlock:
+    Value: !Ref BastionSubnetCidrBlock
+  AppSubnetName:
+    Value: !Ref AppSubnetName
+  AppSubnetCidrBlock:
+    Value: !Ref AppSubnetCidrBlock
+  InternetGatewayName:
+    Value: !Ref InternetGatewayName
+  FrontRTName:
+    Value: !Ref FrontRTName
+  NatEIPName:
+    Value: !Ref NatEIPName
+  NatGatewayName:
+    Value: !Ref NatGatewayName
+  NatRTName:
+    Value: !Ref NatRTName
+  DefaultSecurityGroup:
+    Value: !Ref DefaultSecurityGroup
+  SshSecurityGroup:
+    Value: !Ref SshSecurityGroup
+  FrontSecurityGroup:
+    Value: !Ref FrontSecurityGroup
+  AppSecurityGroup:
+    Value: !Ref AppSecurityGroup
