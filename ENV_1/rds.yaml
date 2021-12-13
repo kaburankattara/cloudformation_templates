@@ -1,0 +1,81 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This CloudFormation template to create RDS db instances.
+
+Mappings:
+  prd:
+    DBSubnet1a: { ID: subnet-xxx }
+    DBSubnet1c: { ID: subnet-xxx }
+    RdsSecurityGroup: { ID: sg-xxx }
+    DBInstance:
+      Engine: aurora-postgresql
+      EngineVersion: 10.6
+      RDS1AvailabilityZone: ap-northeast-1a
+      RDS2AvailabilityZone: ap-northeast-1c
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 13:00-13:30
+      ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
+      InstancePreferredMaintenanceWindow: wed:13:30-wed:14:00
+      DatabaseName: chiba_db
+      AutoMinorVersionUpgrade: true
+      DBInstanceClass: db.r5.large
+    DBParameterGroup:
+      DBEngineFamily: aurora-postgresql10
+
+Parameters:
+  Environment:
+    Description: Type of this environment.
+    Type: String
+    Default: prd
+    AllowedValues:
+      - prd
+      - stg
+  SystemName:
+    Description: Name of this system.
+    Type: String
+    Default: chiba-rds
+  Username:
+    Description: Name of DB mater username.
+    Type: String
+    Default: admin
+  Password:
+    Description: Name of DB mater user password.
+    Type: String
+    NoEcho: true
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Environment Configuration
+        Parameters:
+          - SystemName
+          - Environment
+      - Label:
+          default: RDS DB instace Configuration
+        Parameters:
+          - Username
+          - Password
+
+Resources:
+  # IAM Role for enhanced monitoring
+  RDSMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${SystemName}-${Environment}-rds-monitoring-role
+      Path: /
+      AssumeRolePolicyDocument:
+        !Sub |
+          {
+            "Version": "2012-10-17",
+            "Statement": [
+              {
+                "Effect": "Allow",
+                "Principal": {
+                  "Service": "monitoring.rds.amazonaws.com"
+                },
+                "Action": "sts:AssumeRole"
+              }
+            ]
+          }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
