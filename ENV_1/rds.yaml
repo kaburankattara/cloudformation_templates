@@ -3,9 +3,6 @@ Description: This CloudFormation template to create RDS db instances.
 
 Mappings:
   dev:
-#    DBSubnet1a: { ID: !Ref MyAppSubnetId }
-#    DBSubnet1c: { ID: !Ref MyAppSubnetId }
-#    RdsSecurityGroup: { ID: !Ref MyAppSGId }
     DBInstance:
       Engine: aurora-postgresql
       EngineVersion: 10.16
@@ -15,7 +12,7 @@ Mappings:
       PreferredBackupWindow: 13:00-13:30
       ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
       InstancePreferredMaintenanceWindow: wed:13:30-wed:14:00
-      DatabaseName: chiba_db
+      DatabaseName: my_db
       AutoMinorVersionUpgrade: true
       DBInstanceClass: db.t3.medium
     DBParameterGroup:
@@ -33,7 +30,7 @@ Parameters:
   SystemName:
     Description: Name of this system.
     Type: String
-    Default: chiba-rds
+    Default: my-rds
   Username:
     Description: Name of DB mater username.
     Type: String
@@ -90,51 +87,74 @@ Resources:
 
 
   RDSCluster:
+    Type: AWS::RDS::DBCluster
     Properties:
-      DBClusterParameterGroupName:
-        Ref: RDSDBClusterParameterGroup
+      BackupRetentionPeriod: !FindInMap [ !Ref Environment, DBInstance, BackupRetentionPeriod ]
+      DatabaseName: !FindInMap [ !Ref Environment, DBInstance, DatabaseName ]
+      DBClusterIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-cluster
+      DBClusterParameterGroupName: !Ref RDSDBClusterParameterGroup
       DBSubnetGroupName: 'dbsubnetgroup'
-      Engine: aurora-postgresql
-      EngineVersion: 10.16
-      MasterUserPassword:
-        Ref: Password
-      MasterUsername:
-        Ref: Username
-    Type: "AWS::RDS::DBCluster"
+      DeletionProtection: false
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineMode: provisioned
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MasterUserPassword: !Ref Password
+      MasterUsername: !Ref Username
+      PreferredBackupWindow: !FindInMap [ !Ref Environment, DBInstance, PreferredBackupWindow ]
+      StorageEncrypted: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-cluster
+
   RDSDBInstance1:
+    Type: AWS::RDS::DBInstance
     Properties:
-      AvailabilityZone: ap-northeast-1a
-      DBClusterIdentifier:
-        Ref: RDSCluster
-      DBInstanceClass: db.t3.medium
-      DBParameterGroupName:
-        Ref: RDSDBParameterGroup
+      AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
+      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS1AvailabilityZone ]
+      CopyTagsToSnapshot: true
+      DBClusterIdentifier: !Ref RDSCluster
+      DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]
+      DBInstanceIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-1
+      DBParameterGroupName: !Ref RDSDBParameterGroup
       DBSubnetGroupName: 'dbsubnetgroup'
-      Engine: aurora-postgresql
-      EngineVersion: 10.16
-      PubliclyAccessible: "false"
-    Type: "AWS::RDS::DBInstance"
+      EnablePerformanceInsights: true
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      PreferredMaintenanceWindow: !FindInMap [ !Ref Environment, DBInstance, InstancePreferredMaintenanceWindow ]
+      PromotionTier: 1
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-1
+
   RDSDBInstance2:
+    Type: AWS::RDS::DBInstance
     Properties:
-      AvailabilityZone: ap-northeast-1c
-      DBClusterIdentifier:
-        Ref: RDSCluster
-      DBInstanceClass: db.t3.medium
-      DBParameterGroupName:
-        Ref: RDSDBParameterGroup
+      AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
+      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS2AvailabilityZone ]
+      CopyTagsToSnapshot: true
+      DBClusterIdentifier: !Ref RDSCluster
+      DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]
+      DBInstanceIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-2
+      DBParameterGroupName: !Ref RDSDBParameterGroup
       DBSubnetGroupName: 'dbsubnetgroup'
-      Engine: aurora-postgresql
-      EngineVersion: 10.16
-      PubliclyAccessible: "false"
-    Type: "AWS::RDS::DBInstance"
-
-
-
+      EnablePerformanceInsights: true
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      PreferredMaintenanceWindow: !FindInMap [ !Ref Environment, DBInstance, InstancePreferredMaintenanceWindow ]
+      PromotionTier: 2
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-2
 
 
   # DB subnet group
-#  DBSubnetGroup:
-  dbsubnetgroup:
+  DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
       DBSubnetGroupName: 'dbsubnetgroup'
