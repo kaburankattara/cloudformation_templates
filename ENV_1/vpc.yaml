@@ -775,6 +775,8 @@ Resources:
       SubnetId: !Ref MyAppSubnet
 
 Outputs:
+  MyVpcId:
+    Value: !Ref MyVPC
   MyBastionSubnetId:
     Value: !Ref MyBastionSubnet
   MySshSGId:

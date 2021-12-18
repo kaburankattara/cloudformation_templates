@@ -5,8 +5,8 @@ Parameters:
   Env:
     Type: String
     AllowedValues:
-      - Prod
-      - Stg
+      - prod
+      - staging
       - dev
   NlayerPublic:
     Type: String
@@ -86,6 +86,15 @@ Parameters:
   AppSecurityGroup:
     Type: String
     Default: app-sg
+  Username:
+    Description: Name of DB mater username.
+    Type: String
+    Default: admin
+  Password:
+    Description: Name of DB mater user password.
+    Type: String
+    NoEcho: true
+
 Resources:
   VPC:
     Type: AWS::CloudFormation::Stack
@@ -114,42 +123,55 @@ Resources:
         FrontSecurityGroup: !Ref FrontSecurityGroup
         AppSecurityGroup: !Ref AppSecurityGroup
 
-  Instance:
+#  Instance:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/ec2.yaml
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        TypeFront: !Ref TypeFront
+#        TypeApp: !Ref TypeApp
+#        TypeBastion: !Ref TypeBastion
+#        SpaceChar: !Ref SpaceChar
+#        AvailabilityZone1: !Ref AvailabilityZone1
+#        VpcName: !Ref VpcName
+#        VpcCidrBlock: !Ref VpcCidrBlock
+#        FrontSubnetName: !Ref FrontSubnetName
+#        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
+#        BastionSubnetName: !Ref BastionSubnetName
+#        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+#        AppSubnetName: !Ref AppSubnetName
+#        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
+#        InternetGatewayName: !Ref InternetGatewayName
+#        FrontRTName: !Ref FrontRTName
+#        NatEIPName: !Ref NatEIPName
+#        NatGatewayName: !Ref NatGatewayName
+#        NatRTName: !Ref NatRTName
+#        DefaultSecurityGroup: !Ref DefaultSecurityGroup
+#        SshSecurityGroup: !Ref SshSecurityGroup
+#        FrontSecurityGroup: !Ref FrontSecurityGroup
+#        AppSecurityGroup: !Ref AppSecurityGroup
+#
+#        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId # !GetAtt で受け渡す
+#        MySshSGId: !GetAtt VPC.Outputs.MySshSGId # !GetAtt で受け渡す
+#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId # !GetAtt で受け渡す
+#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId # !GetAtt で受け渡す
+#        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
+#        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
+
+  RDS:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/ec2.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/rds.yaml
       Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        TypeFront: !Ref TypeFront
-        TypeApp: !Ref TypeApp
-        TypeBastion: !Ref TypeBastion
-        SpaceChar: !Ref SpaceChar
-        AvailabilityZone1: !Ref AvailabilityZone1
-        VpcName: !Ref VpcName
-        VpcCidrBlock: !Ref VpcCidrBlock
-        FrontSubnetName: !Ref FrontSubnetName
-        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
-        BastionSubnetName: !Ref BastionSubnetName
-        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
-        AppSubnetName: !Ref AppSubnetName
-        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
-        InternetGatewayName: !Ref InternetGatewayName
-        FrontRTName: !Ref FrontRTName
-        NatEIPName: !Ref NatEIPName
-        NatGatewayName: !Ref NatGatewayName
-        NatRTName: !Ref NatRTName
-        DefaultSecurityGroup: !Ref DefaultSecurityGroup
-        SshSecurityGroup: !Ref SshSecurityGroup
-        FrontSecurityGroup: !Ref FrontSecurityGroup
-        AppSecurityGroup: !Ref AppSecurityGroup
-
-        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId # !GetAtt で受け渡す
-        MySshSGId: !GetAtt VPC.Outputs.MySshSGId # !GetAtt で受け渡す
-        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId # !GetAtt で受け渡す
-        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId # !GetAtt で受け渡す
-        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
-        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
+        SystemName: !Ref SysName
+        Environment: !Ref Env
+        Username: !Ref Username
+        Password: !Ref Password
+        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
 Outputs:
   SysName:
