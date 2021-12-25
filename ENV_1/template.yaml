@@ -160,17 +160,29 @@ Resources:
 #        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
 #        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
 
-  RDS:
+#  RDS:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/rds.yaml
+#      Parameters:
+#        SystemName: !Ref SysName
+#        Environment: !Ref Env
+#        Username: !Ref Username
+#        Password: !Ref Password
+#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+
+  BeansTalk:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/rds.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
       Parameters:
         SystemName: !Ref SysName
         Environment: !Ref Env
-        Username: !Ref Username
-        Password: !Ref Password
         MyVpcId: !GetAtt VPC.Outputs.MyVpcId
         MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
 Outputs:
