@@ -103,6 +103,9 @@ Resources:
         - Namespace: aws:elb:listener:443
           OptionName: ListenerEnabled
           Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: StreamLogs
+          Value: true
 
 
 
