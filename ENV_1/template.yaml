@@ -94,6 +94,10 @@ Parameters:
     Description: Name of DB mater user password.
     Type: String
     NoEcho: true
+  SSLCertificateId:
+    Type: String
+
+
 
 Resources:
   VPC:
@@ -184,6 +188,7 @@ Resources:
         MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
         MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+        SSLCertificateId: !Ref SSLCertificateId
 
 Outputs:
   SysName:

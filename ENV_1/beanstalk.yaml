@@ -21,6 +21,8 @@ Parameters:
     Type: String
   MyAppSGId:
     Type: String
+  SSLCertificateId:
+    Type: String
 
 Resources:
   sampleApplication:
@@ -47,10 +49,10 @@ Resources:
       OptionSettings:
         - Namespace: aws:autoscaling:asg
           OptionName: MinSize
-          Value: '2'
+          Value: '1'
         - Namespace: aws:autoscaling:asg
           OptionName: MaxSize
-          Value: '3'
+          Value: '1'
         - Namespace: aws:elasticbeanstalk:environment
           OptionName: EnvironmentType
           Value: LoadBalanced
@@ -61,6 +63,7 @@ Resources:
 
   sampleEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
+    DependsOn: MyELBSG
     Properties:
       ApplicationName:
         Ref: sampleApplication
@@ -79,6 +82,31 @@ Resources:
         - Namespace : aws:ec2:vpc
           OptionName: ELBSubnets
           Value : !Ref MyFrontSubnetId
+        - Namespace : aws:elb:loadbalancer
+          OptionName: SecurityGroups
+          Value : !Ref MyELBSG
+        - Namespace: aws:elb:loadbalancer
+          OptionName: ManagedSecurityGroup
+          Value: !Ref MyELBSG
+        - Namespace: aws:elb:listener
+          OptionName: ListenerEnabled
+          Value: false
+        - Namespace: aws:elb:listener:443
+          OptionName: ListenerProtocol
+          Value: SSL
+        - Namespace: aws:elb:listener:443
+          OptionName: InstancePort
+          Value: 80
+        - Namespace: aws:elb:listener:443
+          OptionName: SSLCertificateId
+          Value: !Ref SSLCertificateId
+        - Namespace: aws:elb:listener:443
+          OptionName: ListenerEnabled
+          Value: true
+
+
+
+
 
   MyInstanceRole:
     Type: AWS::IAM::Role
@@ -103,3 +131,26 @@ Resources:
     Properties:
       Roles:
         - !Ref MyInstanceRole
+
+
+  MyELBSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Sub '${SystemName}-${Environment}-elb-sg'
+      GroupName: !Sub '${SystemName}-${Environment}-elb-sg'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-elb-sg'
+      VpcId: !Ref MyVpcId
