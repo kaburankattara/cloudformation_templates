@@ -177,18 +177,29 @@ Resources:
 #        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
-  BeansTalk:
+#  BeansTalk:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
+#      Parameters:
+#        SystemName: !Ref SysName
+#        Environment: !Ref Env
+#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+#        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
+#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+#        SSLCertificateId: !Ref SSLCertificateId
+
+  Lamda:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/lamda.yaml
       Parameters:
         SystemName: !Ref SysName
         Environment: !Ref Env
         MyVpcId: !GetAtt VPC.Outputs.MyVpcId
         MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
-        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-        SSLCertificateId: !Ref SSLCertificateId
 
 Outputs:
   SysName:
