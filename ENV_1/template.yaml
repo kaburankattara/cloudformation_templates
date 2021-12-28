@@ -190,10 +190,10 @@ Resources:
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 #        SSLCertificateId: !Ref SSLCertificateId
 
-  Lamda:
+  Lambda:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/lamda.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/lambda.yaml
       Parameters:
         SystemName: !Ref SysName
         Environment: !Ref Env

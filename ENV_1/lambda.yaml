@@ -12,7 +12,7 @@ Parameters:
   SystemName:
     Description: Name of this system.
     Type: String
-    Default: my-Lamda
+    Default: my-Lambda
   TypeFront:
     Type: String
     Default: front
@@ -90,11 +90,23 @@ Parameters:
 
 Resources:
 
-  MyLamda:
+  LambdaEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: String
+      Name: execLambda
+      RoleArn: !GetAtt MyLambdaRole.Arn
+      ScheduleExpression: cron(00,30 0-14,21-23 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt MyLambda.Arn
+          Id: lambda
+
+  MyLambda:
     Type: AWS::Lambda::Function
     Properties:
       Runtime: python3.9
-      Role: !GetAtt MyLamdaRole.Arn
+      Role: !GetAtt MyLambdaRole.Arn
       Handler: index.lambda_handler
       Code:
         ZipFile: |
@@ -120,16 +132,16 @@ Resources:
         Mode: Active
       VpcConfig:
         SecurityGroupIds:
-          - !Ref LamdaSG
+          - !Ref LambdaSG
         SubnetIds:
           - !Ref MyAppSubnetId
 
 
-  LamdaSG:
-    Type: 'AWS::EC2::SecurityGroup'
+  LambdaSG:
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      GroupDescription: !Sub '${SystemName}-${Environment}-lamda-sg'
-      GroupName: !Sub '${SystemName}-${Environment}-lamda-sg'
+      GroupDescription: !Sub '${SystemName}-${Environment}-Lambda-sg'
+      GroupName: !Sub '${SystemName}-${Environment}-Lambda-sg'
       SecurityGroupEgress:
         - CidrIp: 0.0.0.0/0
           Description: outbound
@@ -149,10 +161,10 @@ Resources:
           ToPort: 22
       Tags:
         - Key: Name
-          Value: !Sub '${SystemName}-${Environment}-lamda-sg'
+          Value: !Sub '${SystemName}-${Environment}-Lambda-sg'
       VpcId: !Ref MyVpcId
 
-  MyLamdaRole:
+  MyLambdaRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -162,11 +174,20 @@ Resources:
             Principal:
               Service:
                 - lambda.amazonaws.com
+                - events.amazonaws.com
             Action:
               - sts:AssumeRole
-      Description: lamda role
+      Description: Lambda role
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
       Path: "/"
-      RoleName: "lamdaRole"
+      RoleName: "LambdaRole"
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref MyLambda
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt LambdaEvent.Arn
