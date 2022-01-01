@@ -1,0 +1,54 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This CloudFormation template to create RDS db instances.
+
+Resources:
+
+  MyS3User:
+    Type: AWS::IAM::User
+    Properties:
+      Groups:
+        - !Ref MyS3Group
+      LoginProfile:
+        Password: Aa111111
+        PasswordResetRequired: false
+      UserName: S3-user
+
+  MyS3Group:
+    Type: AWS::IAM::Group
+    Properties:
+      GroupName: s3-group
+
+  MyS3RolePolicy:
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Groups:
+        - !Ref MyS3Group
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: VisualEditor0
+            Effect: Allow
+            Action: s3:*
+            Resource:
+              arn:aws:s3:::my-beanstalk/*
+          - Sid: VisualEditor1
+            Effect: Deny
+            Action: '*'
+            Resource: '*'
+            Condition:
+              NotIpAddress:
+                aws:SourceIp:
+                  0.0.0.0 # 制限対象外のIPアドレスを記述する
+      ManagedPolicyName: s3-allaccess
+
+  S3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: my-beanstalk
+      AccessControl: Private
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: True
+        BlockPublicPolicy: True
+        IgnorePublicAcls: True
+        RestrictPublicBuckets: True
+
