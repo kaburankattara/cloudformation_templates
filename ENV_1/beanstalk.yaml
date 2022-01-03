@@ -28,6 +28,7 @@ Resources:
   sampleApplication:
     Type: AWS::ElasticBeanstalk::Application
     Properties:
+      ApplicationName : !Sub '${SystemName}-${Environment}-application'
       Description: AWS Elastic Beanstalk Sample Application
 
   sampleApplicationVersion:
@@ -37,7 +38,7 @@ Resources:
         Ref: sampleApplication
       Description: AWS ElasticBeanstalk Sample Application Version
       SourceBundle:
-        S3Bucket: !Sub "elasticbeanstalk-ap-northeast-1-498588106976"
+        S3Bucket: !Sub "my-beanstalk"
         S3Key: helloworld-0.0.1-SNAPSHOT.jar
 
   sampleConfigurationTemplate:
@@ -47,31 +48,130 @@ Resources:
         Ref: sampleApplication
       Description: AWS ElasticBeanstalk Sample Configuration Template
       OptionSettings:
+        - Namespace: aws:elasticbeanstalk:hostmanager
+          OptionName: LogPublicationControl
+          Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: StreamLogs
+          Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: RetentionInDays
+          Value: 90
+        - Namespace: aws:elasticbeanstalk:application
+          OptionName: Application Healthcheck URL
+          Value: /
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: sysDateConf
+          Value: 20220103
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: MonitoringInterval
+          Value: 1 minute
         - Namespace: aws:autoscaling:asg
           OptionName: MinSize
-          Value: '1'
+          Value: 1
         - Namespace: aws:autoscaling:asg
           OptionName: MaxSize
-          Value: '1'
-        - Namespace: aws:elasticbeanstalk:environment
-          OptionName: EnvironmentType
-          Value: LoadBalanced
+          Value: 3
+        - Namespace: aws:ec2:instances
+          OptionName: InstanceTypes
+          Value: t2.micro
+        - Namespace: aws:autoscaling:trigger
+          OptionName: MeasureName
+          Value: CPUUtilization
+        - Namespace: aws:autoscaling:trigger
+          OptionName: Unit
+          Value: Percent
+        - Namespace: aws:autoscaling:trigger
+          OptionName: UpperThreshold
+          Value: 50
+        - Namespace: aws:autoscaling:trigger
+          OptionName: LowerThreshold
+          Value: 10
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: MinSize
+          Value: 2
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: MaxSize
+          Value: 4
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: StartTime
+          Value: 2019-04-18T15:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: Recurrence
+          Value: 0 21 * * 0-6
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: EndTime
+          Value: 2099-04-19T15:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: MinSize
+          Value: 0
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: MaxSize
+          Value: 0
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: Recurrence
+          Value: 30 14 * * *
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: StartTime
+          Value: 2019-04-19T14:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: EndTime
+          Value: 2099-04-19T15:00:00Z
+        - Namespace: aws:elasticbeanstalk:command
+          OptionName: DeploymentPolicy
+          Value: RollingWithAdditionalBatch
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: RollingUpdateEnabled
+          Value: true
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: RollingUpdateType
+          Value: Health
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: MinInstancesInService
+          Value: 1
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: EC2KeyName
+          Value: osaka-region
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Ref MyInstanceProfile
-      SolutionStackName: 64bit Amazon Linux 2 v3.2.9 running Corretto 8
+# 後で
+#        - Namespace: aws:elasticbeanstalk:environment
+#          OptionName: ServiceRole
+#          Value:
+        - Namespace: aws:elasticbeanstalk:healthreporting:system
+          OptionName: SystemType
+          Value: basic
+        - Namespace: aws:elasticbeanstalk:managedactions
+          OptionName: ManagedActionsEnabled
+          Value: false
+        - Namespace: aws:elasticbeanstalk:sns:topics
+          OptionName: Notification Endpoint
+          Value: a@a
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: LoadBalanced
+      SolutionStackName: 64bit Amazon Linux 2 v3.2.10 running Corretto 8
 
   sampleEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
     DependsOn: MyELBSG
     Properties:
-      ApplicationName:
-        Ref: sampleApplication
+      EnvironmentName : !Sub '${SystemName}-${Environment}'
+      ApplicationName: !Ref sampleApplication
       Description: AWS ElasticBeanstalk Sample Environment
-      TemplateName:
-        Ref: sampleConfigurationTemplate
-      VersionLabel:
-        Ref: sampleApplicationVersion
+      TemplateName: !Ref sampleConfigurationTemplate
+      VersionLabel: !Ref sampleApplicationVersion
       OptionSettings:
         - Namespace : aws:ec2:vpc
           OptionName : VPCId
@@ -93,7 +193,7 @@ Resources:
           Value: false
         - Namespace: aws:elb:listener:443
           OptionName: ListenerProtocol
-          Value: SSL
+          Value: HTTPS
         - Namespace: aws:elb:listener:443
           OptionName: InstancePort
           Value: 80
@@ -106,7 +206,6 @@ Resources:
         - Namespace: aws:elasticbeanstalk:cloudwatch:logs
           OptionName: StreamLogs
           Value: true
-
 
 
 
@@ -137,7 +236,7 @@ Resources:
 
 
   MyELBSG:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub '${SystemName}-${Environment}-elb-sg'
       GroupName: !Sub '${SystemName}-${Environment}-elb-sg'
