@@ -95,9 +95,9 @@ Resources:
   MyBastionInstance:
     Type: 'AWS::EC2::Instance'
     Properties:
-      ImageId: ami-0218d08a1f9dac831
+      ImageId: ami-0f1ffb565070e6947
       InstanceType: t2.micro
-      KeyName: cassandra2
+      KeyName: osaka-region
       NetworkInterfaces:
         - SubnetId: !Ref MyBastionSubnetId
           GroupSet:
@@ -107,33 +107,33 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeBastion}'
-  MyAppInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      ImageId: ami-0218d08a1f9dac831
-      InstanceType: t2.micro
-      KeyName: cassandra2
-      NetworkInterfaces:
-        - SubnetId: !Ref MyAppSubnetId
-          GroupSet:
-            - !Ref MyAppSGId
-          AssociatePublicIpAddress: false
-          DeviceIndex: 0
-      Tags:
-        - Key: Name
-          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeApp}'
-  MyFrontInstance:
-    Type: 'AWS::EC2::Instance'
-    Properties:
-      ImageId: ami-0218d08a1f9dac831
-      InstanceType: t2.micro
-      KeyName: cassandra2
-      NetworkInterfaces:
-        - SubnetId: !Ref MyFrontSubnetId
-          GroupSet:
-            - !Ref MyFrontSGId
-          AssociatePublicIpAddress: true
-          DeviceIndex: 0
-      Tags:
-        - Key: Name
-          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeFront}'
+#  MyAppInstance:
+#    Type: 'AWS::EC2::Instance'
+#    Properties:
+#      ImageId: ami-0f1ffb565070e6947
+#      InstanceType: t2.micro
+#      KeyName: cassandra2
+#      NetworkInterfaces:
+#        - SubnetId: !Ref MyAppSubnetId
+#          GroupSet:
+#            - !Ref MyAppSGId
+#          AssociatePublicIpAddress: false
+#          DeviceIndex: 0
+#      Tags:
+#        - Key: Name
+#          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeApp}'
+#  MyFrontInstance:
+#    Type: 'AWS::EC2::Instance'
+#    Properties:
+#      ImageId: ami-0f1ffb565070e6947
+#      InstanceType: t2.micro
+#      KeyName: cassandra2
+#      NetworkInterfaces:
+#        - SubnetId: !Ref MyFrontSubnetId
+#          GroupSet:
+#            - !Ref MyFrontSGId
+#          AssociatePublicIpAddress: true
+#          DeviceIndex: 0
+#      Tags:
+#        - Key: Name
+#          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeFront}'

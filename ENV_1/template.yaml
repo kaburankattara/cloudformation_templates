@@ -34,7 +34,7 @@ Parameters:
     Default: '-'
   AvailabilityZone1:
     Type: String
-    Default: ap-northeast-1a
+    Default: ap-northeast-3a
   VpcName:
     Type: String
     Default: vpc
@@ -127,42 +127,42 @@ Resources:
         FrontSecurityGroup: !Ref FrontSecurityGroup
         AppSecurityGroup: !Ref AppSecurityGroup
 
-#  Instance:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/ec2.yaml
-#      Parameters:
-#        SysName: !Ref SysName
-#        Env: !Ref Env
-#        TypeFront: !Ref TypeFront
-#        TypeApp: !Ref TypeApp
-#        TypeBastion: !Ref TypeBastion
-#        SpaceChar: !Ref SpaceChar
-#        AvailabilityZone1: !Ref AvailabilityZone1
-#        VpcName: !Ref VpcName
-#        VpcCidrBlock: !Ref VpcCidrBlock
-#        FrontSubnetName: !Ref FrontSubnetName
-#        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
-#        BastionSubnetName: !Ref BastionSubnetName
-#        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
-#        AppSubnetName: !Ref AppSubnetName
-#        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
-#        InternetGatewayName: !Ref InternetGatewayName
-#        FrontRTName: !Ref FrontRTName
-#        NatEIPName: !Ref NatEIPName
-#        NatGatewayName: !Ref NatGatewayName
-#        NatRTName: !Ref NatRTName
-#        DefaultSecurityGroup: !Ref DefaultSecurityGroup
-#        SshSecurityGroup: !Ref SshSecurityGroup
-#        FrontSecurityGroup: !Ref FrontSecurityGroup
-#        AppSecurityGroup: !Ref AppSecurityGroup
-#
-#        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId # !GetAtt で受け渡す
-#        MySshSGId: !GetAtt VPC.Outputs.MySshSGId # !GetAtt で受け渡す
-#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId # !GetAtt で受け渡す
-#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId # !GetAtt で受け渡す
-#        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
-#        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
+  Instance:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/ec2.yaml
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        TypeFront: !Ref TypeFront
+        TypeApp: !Ref TypeApp
+        TypeBastion: !Ref TypeBastion
+        SpaceChar: !Ref SpaceChar
+        AvailabilityZone1: !Ref AvailabilityZone1
+        VpcName: !Ref VpcName
+        VpcCidrBlock: !Ref VpcCidrBlock
+        FrontSubnetName: !Ref FrontSubnetName
+        FrontSubnetCidrBlock: !Ref FrontSubnetCidrBlock
+        BastionSubnetName: !Ref BastionSubnetName
+        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+        AppSubnetName: !Ref AppSubnetName
+        AppSubnetCidrBlock: !Ref AppSubnetCidrBlock
+        InternetGatewayName: !Ref InternetGatewayName
+        FrontRTName: !Ref FrontRTName
+        NatEIPName: !Ref NatEIPName
+        NatGatewayName: !Ref NatGatewayName
+        NatRTName: !Ref NatRTName
+        DefaultSecurityGroup: !Ref DefaultSecurityGroup
+        SshSecurityGroup: !Ref SshSecurityGroup
+        FrontSecurityGroup: !Ref FrontSecurityGroup
+        AppSecurityGroup: !Ref AppSecurityGroup
+
+        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId # !GetAtt で受け渡す
+        MySshSGId: !GetAtt VPC.Outputs.MySshSGId # !GetAtt で受け渡す
+        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId # !GetAtt で受け渡す
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId # !GetAtt で受け渡す
+        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId # !GetAtt で受け渡す
+        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
 
 #  RDS:
 #    Type: AWS::CloudFormation::Stack
@@ -177,29 +177,29 @@ Resources:
 #        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
-#  BeansTalk:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
-#      Parameters:
-#        SystemName: !Ref SysName
-#        Environment: !Ref Env
-#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
-#        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
-#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-#        SSLCertificateId: !Ref SSLCertificateId
-
-  Lambda:
+  BeansTalk:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/lambda.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
       Parameters:
         SystemName: !Ref SysName
         Environment: !Ref Env
         MyVpcId: !GetAtt VPC.Outputs.MyVpcId
         MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+        MyFrontSubnetId: !GetAtt VPC.Outputs.MyFrontSubnetId
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+        SSLCertificateId: !Ref SSLCertificateId
+
+#  Lambda:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/lambda.yaml
+#      Parameters:
+#        SystemName: !Ref SysName
+#        Environment: !Ref Env
+#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnetId
+#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
 Outputs:
   SysName:
