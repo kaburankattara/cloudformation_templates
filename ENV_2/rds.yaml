@@ -1,0 +1,222 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: This CloudFormation template to create RDS db instances.
+
+Mappings:
+  prod:
+    DBInstance:
+      Engine: aurora-postgresql
+      EngineVersion: 10.16
+      RDS1AvailabilityZone: ap-northeast-3a
+      RDS2AvailabilityZone: ap-northeast-3c
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 13:00-13:30
+      ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
+      InstancePreferredMaintenanceWindow: wed:13:30-wed:14:00
+      DatabaseName: my_db
+      AutoMinorVersionUpgrade: true
+      DBInstanceClass: db.t3.medium
+    DBParameterGroup:
+      DBEngineFamily: aurora-postgresql10
+  dev:
+    DBInstance:
+      Engine: aurora-postgresql
+      EngineVersion: 10.16
+      RDS1AvailabilityZone: ap-northeast-3a
+      RDS2AvailabilityZone: ap-northeast-3c
+      BackupRetentionPeriod: 7
+      PreferredBackupWindow: 13:00-13:30
+      ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
+      InstancePreferredMaintenanceWindow: wed:13:30-wed:14:00
+      DatabaseName: my_db
+      AutoMinorVersionUpgrade: true
+      DBInstanceClass: db.t3.medium
+    DBParameterGroup:
+      DBEngineFamily: aurora-postgresql10
+
+Parameters:
+  Environment:
+    Description: Type of this environment.
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+  SystemName:
+    Description: Name of this system.
+    Type: String
+    Default: my-rds
+  Username:
+    Description: Name of DB mater username.
+    Type: String
+    Default: admintest
+  Password:
+    Description: Name of DB mater user password.
+    Type: String
+    NoEcho: true
+
+  MyVpcId:
+    Type: String
+  MyAppSubnet1Id:
+    Type: String
+  MyAppSubnet2Id:
+    Type: String
+  MyAppSGId:
+    Type: String
+
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Environment Configuration
+        Parameters:
+          - SystemName
+          - Environment
+      - Label:
+          default: RDS DB instace Configuration
+        Parameters:
+          - Username
+          - Password
+
+Resources:
+  # IAM Role for enhanced monitoring
+  RDSMonitoringRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ${SystemName}-${Environment}-rds-monitoring-role
+      Path: /
+      AssumeRolePolicyDocument:
+        !Sub |
+        {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "monitoring.rds.amazonaws.com"
+              },
+              "Action": "sts:AssumeRole"
+            }
+          ]
+        }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonRDSEnhancedMonitoringRole
+
+
+  RDSCluster:
+    Type: AWS::RDS::DBCluster
+    Properties:
+      BackupRetentionPeriod: !FindInMap [ !Ref Environment, DBInstance, BackupRetentionPeriod ]
+      DatabaseName: !FindInMap [ !Ref Environment, DBInstance, DatabaseName ]
+      DBClusterIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-cluster
+      DBClusterParameterGroupName: !Ref RDSDBClusterParameterGroup
+      DBSubnetGroupName: 'dbsubnetgroup'
+      DeletionProtection: false
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineMode: provisioned
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MasterUserPassword: !Ref Password
+      MasterUsername: !Ref Username
+      PreferredBackupWindow: !FindInMap [ !Ref Environment, DBInstance, PreferredBackupWindow ]
+      StorageEncrypted: true
+      Port: 5432
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-cluster
+
+  RDSDBInstance1:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
+      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS1AvailabilityZone ]
+      CopyTagsToSnapshot: true
+      DBClusterIdentifier: !Ref RDSCluster
+      DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]
+      DBInstanceIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-1
+      DBParameterGroupName: !Ref RDSDBParameterGroup
+      DBSubnetGroupName: 'dbsubnetgroup'
+      EnablePerformanceInsights: true
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      PreferredMaintenanceWindow: !FindInMap [ !Ref Environment, DBInstance, InstancePreferredMaintenanceWindow ]
+      PromotionTier: 1
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-1
+
+  RDSDBInstance2:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
+      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS2AvailabilityZone ]
+      CopyTagsToSnapshot: true
+      DBClusterIdentifier: !Ref RDSCluster
+      DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]
+      DBInstanceIdentifier: !Sub ${SystemName}-${Environment}-aurora-posgre-2
+      DBParameterGroupName: !Ref RDSDBParameterGroup
+      DBSubnetGroupName: 'dbsubnetgroup'
+      EnablePerformanceInsights: true
+      Engine: !FindInMap [ !Ref Environment, DBInstance, Engine ]
+      EngineVersion: !FindInMap [ !Ref Environment, DBInstance, EngineVersion ]
+      MonitoringInterval: 60
+      MonitoringRoleArn: !GetAtt RDSMonitoringRole.Arn
+      PreferredMaintenanceWindow: !FindInMap [ !Ref Environment, DBInstance, InstancePreferredMaintenanceWindow ]
+      PromotionTier: 2
+      PubliclyAccessible: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SystemName}-${Environment}-aurora-posgre-2
+
+
+  # DB subnet group
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: 'dbsubnetgroup'
+      DBSubnetGroupDescription: !Sub ${SystemName}-${Environment}-db-subnet-group
+      SubnetIds:
+        - !Ref MyAppSubnet1Id
+        - !Ref MyAppSubnet2Id
+#        - !FindInMap [ !Ref Environment, DBSubnet1c, ID ]
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-db-subnet-group'
+
+  # DB Cluster Parameter Group
+  RDSDBClusterParameterGroup:
+    Type: AWS::RDS::DBClusterParameterGroup
+    Properties:
+      Description: !Sub ${SystemName}-${Environment}-db-cluster-param-group
+      Family: !FindInMap [ !Ref Environment, DBParameterGroup, DBEngineFamily ]
+      Parameters:
+        client_encoding: 'UTF8'
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-db-cluster-param-group'
+
+  # DB parameter group
+  RDSDBParameterGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Description: !Sub ${SystemName}-${Environment}-db-param-group
+      Family: !FindInMap [ !Ref Environment, DBParameterGroup, DBEngineFamily ]
+      Parameters: {}
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-db-param-group'
+
+
+
+
+#  MyRdsSubnet:
+#    Type: 'AWS::EC2::Subnet'
+#    Properties:
+#      AvailabilityZone: ap-northeast-3c
+#      CidrBlock: 192.168.31.0/24
+#      Tags:
+#        - Key: Name
+#          Value: !Sub ${SystemName}-${Environment}-db-Subnet'
+#      VpcId: !Ref MyVpcId
