@@ -149,10 +149,9 @@ Resources:
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Ref MyInstanceProfile
-# 後で
-#        - Namespace: aws:elasticbeanstalk:environment
-#          OptionName: ServiceRole
-#          Value:
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value: !Ref MyServiceRole
         - Namespace: aws:elasticbeanstalk:healthreporting:system
           OptionName: SystemType
           Value: basic
@@ -186,6 +185,9 @@ Resources:
         - Namespace : aws:ec2:vpc
           OptionName: ELBSubnets
           Value : !Sub '${MyFrontSubnet1Id}, ${MyFrontSubnet2Id}'
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: SecurityGroups
+          Value : !Ref MyBEANSTALKAPPSG
         - Namespace : aws:elb:loadbalancer
           OptionName: SecurityGroups
           Value : !Ref MyELBSG
@@ -212,7 +214,23 @@ Resources:
           Value: true
 
 
-
+  MyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - elasticbeanstalk.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: Beanstalk EC2 role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth
+        - arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkService
+      RoleName : aws-elasticbeanstalk-service-role
 
   MyInstanceRole:
     Type: AWS::IAM::Role
@@ -231,10 +249,12 @@ Resources:
         - arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier
         - arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker
         - arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier
+      RoleName : aws-elasticbeanstalk-ec2-role
 
   MyInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
+      InstanceProfileName: aws-elasticbeanstalk-instanceprofile
       Roles:
         - !Ref MyInstanceRole
 
@@ -259,4 +279,32 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub '${SystemName}-${Environment}-elb-sg'
+      VpcId: !Ref MyVpcId
+
+
+  MyBEANSTALKAPPSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
+      GroupName: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - SourceSecurityGroupId: !GetAtt MyELBSG.GroupId
+          Description: inbound
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
       VpcId: !Ref MyVpcId
