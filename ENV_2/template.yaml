@@ -201,8 +201,12 @@ Resources:
         Username: !Ref Username
         Password: !Ref Password
         MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
         MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
         MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
+        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+        AppSubnet1CidrBlock: !Ref AppSubnet1CidrBlock
+        AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
 #  BeansTalk:
