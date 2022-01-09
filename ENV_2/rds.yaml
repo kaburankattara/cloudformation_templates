@@ -57,12 +57,23 @@ Parameters:
 
   MyVpcId:
     Type: String
+  MyBastionSubnetId:
+    Type: String
   MyAppSubnet1Id:
     Type: String
   MyAppSubnet2Id:
     Type: String
   MyAppSGId:
     Type: String
+  BastionSubnetCidrBlock:
+    Type: String
+    Default: 192.168.17.0/24
+  AppSubnet1CidrBlock:
+    Type: String
+    Default: 192.168.30.0/24
+  AppSubnet2CidrBlock:
+    Type: String
+    Default: 192.168.31.0/24
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -119,6 +130,8 @@ Resources:
       MasterUsername: !Ref Username
       PreferredBackupWindow: !FindInMap [ !Ref Environment, DBInstance, PreferredBackupWindow ]
       StorageEncrypted: true
+      VpcSecurityGroupIds:
+        - !Ref MyRdsSG
       Port: 5432
       Tags:
         - Key: Name
@@ -210,6 +223,38 @@ Resources:
 
 
 
+
+  MyRdsSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: !Sub '${SystemName}-${Environment}-rdsSecurityGroup'
+      GroupName: !Sub '${SystemName}-${Environment}-rdsSecurityGroup'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: !Ref BastionSubnetCidrBlock
+          Description: inbound
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+        - CidrIp: !Ref AppSubnet1CidrBlock
+          Description: inbound
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+        - CidrIp: !Ref AppSubnet2CidrBlock
+          Description: inbound
+          FromPort: 5432
+          IpProtocol: tcp
+          ToPort: 5432
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-rdsSecurityGroup'
+      VpcId: !Ref MyVpcId
 
 #  MyRdsSubnet:
 #    Type: 'AWS::EC2::Subnet'
