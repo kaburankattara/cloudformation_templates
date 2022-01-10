@@ -1,0 +1,70 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  CodeBuildProjectName:
+    Type: String
+  RepositoryUrl:
+    Type: String
+  S3BucketName:
+    Type: String
+
+Resources:
+
+  CodebuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : aws-codebuild-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+
+  BuildPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: codebuild-polocy
+      Roles:
+        - !Ref CodebuildRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:*
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - s3:*
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - codebuild:*
+            Resource: '*'
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Ref CodeBuildProjectName
+      Description: A description about my project
+      ServiceRole: !GetAtt CodebuildRole.Arn
+      Artifacts:
+        Type: S3
+        Location: !Ref S3BucketName
+        Name: /
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+# 環境変数
+#        EnvironmentVariables:
+#          - Name: varName
+#            Type: varType
+#            Value: varValue
+      Source:
+        Auth:
+          Type: OAUTH
+        Location: !Ref RepositoryUrl
+        Type: GITHUB
