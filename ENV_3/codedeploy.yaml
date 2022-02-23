@@ -3,10 +3,10 @@ AWSTemplateFormatVersion: 2010-09-09
 
 Resources:
 
-  CodeDeployRole:
+  CodeDeployServiceRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName : aws-codeDeploy-role
+      RoleName : aws-codedeploy-service-role
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -18,25 +18,24 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AWSCodeDeployDeployerAccess
         - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
-        - arn:aws:iam::aws:policy/AWSCodeDeployFullAccess
 
-  CodeDeployRolePolicies:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: AWSCodeDeployDeployerAccess
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action: codedeploy:CreateDeployment
-            Resource: "*"
-      Roles:
-        - !Ref CodeDeployRole
+#  CodeDeployServiceRolePolicies:
+#    Type: AWS::IAM::Policy
+#    Properties:
+#      PolicyName: CreateDeployment-Policy
+#      PolicyDocument:
+#        Version: 2012-10-17
+#        Statement:
+#          - Effect: Allow
+#            Action: codedeploy:CreateDeployment
+#            Resource: "*"
+#      Roles:
+#        - !Ref CodeDeployServiceRole
 
   CodeDeployEc2Role:
     Type: AWS::IAM::Role
     Properties:
-      RoleName : aws-codeDeploy-ec2-role
+      RoleName : codedeploy-ec2-role
       AssumeRolePolicyDocument:
         Version: 2012-10-17
         Statement:
@@ -48,17 +47,13 @@ Resources:
               - sts:AssumeRole
       Path: /
 
-  AWSCodeDeployDeployerAccessPolicies:
+  CodeDeployEc2RolePolicies:
     Type: AWS::IAM::Policy
     Properties:
-      PolicyName: AWSCodeDeployDeployerAccess
+      PolicyName: codedeploy-ec2-role-policies
       PolicyDocument:
         Version: 2012-10-17
         Statement:
-          - Action:
-              - "codedeploy:CreateDeployment"
-            Effect: Allow
-            Resource: "*"
           - Action:
               - "s3:Get*"
               - "s3:List*"
@@ -67,7 +62,7 @@ Resources:
       Roles:
         - !Ref CodeDeployEc2Role
 
-  CodeDeployEc2RoleProfile: 
+  CodeDeployEc2RoleProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
@@ -100,7 +95,7 @@ Resources:
         - Key: Name
           Type: KEY_AND_VALUE
           Value: helloWorld-dev-app
-      ServiceRoleArn: !GetAtt CodeDeployRole.Arn
+      ServiceRoleArn: !GetAtt CodeDeployServiceRole.Arn
       
 Outputs:
   CodeDeployEc2RoleProfileId:
