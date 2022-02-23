@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+
+Resources:
+
+  CodeDeployRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : aws-codeDeploy-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: ""
+            Effect: Allow
+            Principal:
+              Service: codedeploy.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSCodeDeployDeployerAccess
+        - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
+        - arn:aws:iam::aws:policy/AWSCodeDeployFullAccess
+
+  CodeDeployRolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AWSCodeDeployDeployerAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action: codedeploy:CreateDeployment
+            Resource: "*"
+      Roles:
+        - !Ref CodeDeployRole
+
+  CodeDeployEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : aws-codeDeploy-ec2-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+                - codedeploy.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+
+  AWSCodeDeployDeployerAccessPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AWSCodeDeployDeployerAccess
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - "codedeploy:Batch*"
+              - "codedeploy:CreateDeployment"
+              - "codedeploy:Get*"
+              - "codedeploy:List*"
+              - "codedeploy:RegisterApplicationRevision"
+            Effect: Allow
+            Resource: "*"
+          - Action:
+              - "s3:Get*"
+              - "s3:List*"
+            Effect: "Allow"
+            Resource: "*"
+          - Action:
+              - "ec2:*"
+            Effect: Allow
+            Resource: "*"
+          - Sid: "CodeStarNotificationsReadWriteAccess"
+            Effect: Allow
+            Action:
+              - "codestar-notifications:CreateNotificationRule"
+              - "codestar-notifications:DescribeNotificationRule"
+              - "codestar-notifications:UpdateNotificationRule"
+              - "codestar-notifications:Subscribe"
+              - "codestar-notifications:Unsubscribe"
+            Resource: "*"
+            Condition:
+              StringLike:
+                codestar-notifications:NotificationsForResource: "arn:aws:codedeploy:*"
+          - Sid: "CodeStarNotificationsListAccess"
+            Effect: Allow
+            Action:
+              - "codestar-notifications:ListNotificationRules"
+              - "codestar-notifications:ListTargets"
+              - "codestar-notifications:ListTagsforResource"
+              - "codestar-notifications:ListEventTypes"
+            Resource: "*"
+          - Sid: "CodeStarNotificationsChatbotAccess"
+            Effect: Allow
+            Action:
+              - "chatbot:DescribeSlackChannelConfigurations"
+            Resource: "*"
+          - Sid: SNSTopicListAccess
+            Effect: Allow
+            Action:
+              - sns:ListTopics
+            Resource: "*"
+      Roles:
+        - !Ref CodeDeployEc2Role
+
+  CodeDeployEc2RoleProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref CodeDeployEc2Role
+
+  CodeDeployApplication:
+    Type: AWS::CodeDeploy::Application
+    Properties:
+      ApplicationName: helloWorld
+      ComputePlatform: Server
+
+  CodeDeployDeploymentGroup:
+    Type: AWS::CodeDeploy::DeploymentGroup
+    Properties:
+      ApplicationName: helloWorld
+      Deployment:
+        Revision:
+          RevisionType: S3
+          S3Location:
+            Bucket: my-beanstalk-tokyo
+            BundleType: zip
+            Key: helloworld-0.0.1-SNAPSHOT.jar
+      DeploymentConfigName: CodeDeployDefault.OneAtATime
+      DeploymentGroupName: helloWorld-DeploymentGroup
+      DeploymentStyle:
+        DeploymentOption: WITHOUT_TRAFFIC_CONTROL
+        DeploymentType: IN_PLACE
+      Ec2TagFilters:
+        - Key: Name
+          Type: KEY_AND_VALUE
+          Value: helloWorld-dev-app
+      ServiceRoleArn: !GetAtt CodeDeployRole.Arn
+      
+Outputs:
+  CodeDeployEc2RoleProfileId:
+    Value: !Ref CodeDeployEc2RoleProfile

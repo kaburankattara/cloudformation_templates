@@ -1,0 +1,249 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  SysName:
+    Type: String
+  Env:
+    Type: String
+    AllowedValues:
+      - Prod
+      - Stg
+      - dev
+  TypeFront:
+    Type: String
+    Default: front
+  TypeApp:
+    Type: String
+    Default: app
+  TypeBastion:
+    Type: String
+    Default: bastion
+  SpaceChar:
+    Type: String
+    Default: '-'
+  AvailabilityZone1:
+    Type: String
+    AllowedValues:
+      - ap-northeast-1a
+      - ap-northeast-3a
+      - ap-northeast-3b
+      - ap-northeast-3c
+    Default: ap-northeast-1a
+  AvailabilityZone2:
+    Type: String
+    AllowedValues:
+      - ap-northeast-3a
+      - ap-northeast-3b
+      - ap-northeast-3c
+      - ap-northeast-1c
+    Default: ap-northeast-1c
+  VpcName:
+    Type: String
+    Default: vpc
+  VpcCidrBlock:
+    Type: String
+    Default: 192.168.16.0/20
+  FrontSubnetName:
+    Type: String
+    Default: front-Subnet
+  FrontSubnet1CidrBlock:
+    Type: String
+    Default: 192.168.20.0/24
+  FrontSubnet2CidrBlock:
+    Type: String
+    Default: 192.168.21.0/24
+  BastionSubnetName:
+    Type: String
+    Default: bastion-subnet
+  BastionSubnetCidrBlock:
+    Type: String
+    Default: 192.168.17.0/24
+  AppSubnetName:
+    Type: String
+    Default: app-subnet
+  AppSubnet1CidrBlock:
+    Type: String
+    Default: 192.168.30.0/24
+  AppSubnet2CidrBlock:
+    Type: String
+    Default: 192.168.31.0/24
+  InternetGatewayName:
+    Type: String
+    Default: internetGateway
+  FrontRTName:
+    Type: String
+    Default: front-rt
+  NatEIPName:
+    Type: String
+    Default: nat-ip
+  NatGatewayName:
+    Type: String
+    Default: natGateway
+  NatRTName:
+    Type: String
+    Default: nat-rt
+  DefaultSecurityGroup:
+    Type: String
+    Default: default-sg
+  SshSecurityGroup:
+    Type: String
+    Default: ssh-sg
+  FrontSecurityGroup:
+    Type: String
+    Default: front-sg
+  AppSecurityGroup:
+    Type: String
+    Default: app-sg
+
+
+  MyBastionSubnetId:
+    Type: String
+  MySshSGId:
+    Type: String
+  MyAppSubnet1Id:
+    Type: String
+  MyAppSubnet2Id:
+    Type: String
+  MyAppSGId:
+    Type: String
+  MyFrontSubnet1Id:
+    Type: String
+  MyFrontSubnet2Id:
+    Type: String
+  MyFrontSGId:
+    Type: String
+
+  CodeDeployEc2RoleProfileId:
+    Type: String
+
+Resources:
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: sample-launch-template
+      LaunchTemplateData:
+        UserData:
+          Fn::Base64: !Sub
+            - |
+              #!/bin/bash
+
+              yum -y update > /home/ec2-user/update-result.txt
+              yum -y install ruby > /home/ec2-user/ruby-result.txt
+              yum -y install wget > /home/ec2-user/wget-install-result.txt
+
+              cd /home/ec2-user
+              wget https://aws-codedeploy-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latest/install
+              chmod +x ./install
+              ./install auto
+              service codedeploy-agent status > /home/ec2-user/codedeploy-agent-install-result.txt
+
+            - {
+              FileName: LaunchTemplate
+            }
+
+  MyAppInstance1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-08a8688fb7eacb171
+      InstanceType: t3.nano
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyBastionSubnetId
+          GroupSet:
+            - !Ref MySshSGId
+          AssociatePublicIpAddress: true
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub 'helloWorld${SpaceChar}${Env}${SpaceChar}${TypeApp}'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      IamInstanceProfile:
+        !Ref CodeDeployEc2RoleProfileId
+
+
+
+
+
+
+#  AWSCodeDeployDeployerAccessRole:
+#    Type: "AWS::IAM::Role"
+#    Properties:
+#      AssumeRolePolicyDocument:
+#        Version: "2012-10-17"
+#        Statement:
+#          -
+#            Effect: "Allow"
+#            Principal:
+#              Service:
+#                - "ec2.amazonaws.com"
+#                - "codedeploy.amazonaws.com"
+#            Action:
+#              - "sts:AssumeRole"
+#      Path: "/"
+#
+#  AWSCodeDeployDeployerAccessPolicies:
+#    Type: AWS::IAM::Policy
+#    Properties:
+#      PolicyName: AWSCodeDeployDeployerAccess
+#      PolicyDocument:
+#        Version: '2012-10-17'
+#        Statement:
+#          - Action:
+#              - "codedeploy:Batch*"
+#              - "codedeploy:CreateDeployment"
+#              - "codedeploy:Get*"
+#              - "codedeploy:List*"
+#              - "codedeploy:RegisterApplicationRevision"
+#            Effect: "Allow"
+#            Resource: "*"
+#          - Action:
+#              - "s3:Get*"
+#              - "s3:List*"
+#            Effect: "Allow"
+#            Resource: "arn:aws:s3:::codepipeline-ap-northeast-1-174083252899/*"
+#          - Action:
+#              - "ec2:*"
+#            Effect: "Allow"
+#            Resource: "*"
+#          - Sid: "CodeStarNotificationsReadWriteAccess"
+#            Effect: "Allow"
+#            Action:
+#              - "codestar-notifications:CreateNotificationRule"
+#              - "codestar-notifications:DescribeNotificationRule"
+#              - "codestar-notifications:UpdateNotificationRule"
+#              - "codestar-notifications:Subscribe"
+#              - "codestar-notifications:Unsubscribe"
+#            Resource: "*"
+#            Condition:
+#              StringLike:
+#                codestar-notifications:NotificationsForResource: "arn:aws:codedeploy:*"
+#          - Sid: "CodeStarNotificationsListAccess"
+#            Effect: "Allow"
+#            Action:
+#              - "codestar-notifications:ListNotificationRules"
+#              - "codestar-notifications:ListTargets"
+#              - "codestar-notifications:ListTagsforResource"
+#              - "codestar-notifications:ListEventTypes"
+#            Resource: "*"
+#          - Sid: "CodeStarNotificationsChatbotAccess"
+#            Effect: "Allow"
+#            Action:
+#              - "chatbot:DescribeSlackChannelConfigurations"
+#            Resource: "*"
+#          - Sid: "SNSTopicListAccess"
+#            Effect: "Allow"
+#            Action:
+#              - "sns:ListTopics"
+#            Resource: "*"
+#      Roles:
+#        - !Ref AWSCodeDeployDeployerAccessRole
+#
+#  AWSCodeDeployDeployerAccessInstanceProfile:
+#    Type: AWS::IAM::InstanceProfile
+#    Properties:
+#      Path: "/"
+#      Roles:
+#        - !Ref AWSCodeDeployDeployerAccessRole
