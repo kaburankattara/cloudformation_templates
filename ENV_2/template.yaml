@@ -36,17 +36,19 @@ Parameters:
   AvailabilityZone1:
     Type: String
     AllowedValues:
+      - ap-northeast-1a
       - ap-northeast-3a
       - ap-northeast-3b
       - ap-northeast-3c
-    Default: ap-northeast-3a
+    Default: ap-northeast-1a
   AvailabilityZone2:
     Type: String
     AllowedValues:
       - ap-northeast-3a
       - ap-northeast-3b
       - ap-northeast-3c
-    Default: ap-northeast-3c
+      - ap-northeast-1c
+    Default: ap-northeast-1c
   VpcName:
     Type: String
     Default: vpc
@@ -115,8 +117,15 @@ Parameters:
     NoEcho: true
   SSLCertificateId:
     Type: String
-
-
+  BucketForBuildedSource:
+    Type: String
+    Default: my-beanstalk-tokyo
+  BuildedSource:
+    Type: String
+    Default: helloworld-0.0.1-SNAPSHOT.jar
+  DeployDestinationEC2Name:
+    Type: String
+    Default: helloWorld-dev-app
 
 Resources:
   VPC:
@@ -191,6 +200,66 @@ Resources:
 #        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id # !GetAtt で受け渡す
 #        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId # !GetAtt で受け渡す
 
+  CodeDeploy:
+    DependsOn: InstanceWithCodeDeploy
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/codedeploy.yaml
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
+        BucketForBuildedSource: !Ref BucketForBuildedSource
+        BuildedSource: !Ref BuildedSource
+        DeployDestinationEC2Name: !Ref DeployDestinationEC2Name
+
+
+  InstanceWithCodeDeploy:
+    DependsOn: VPC
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/applicationEc2.yaml
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        TypeFront: !Ref TypeFront
+        TypeApp: !Ref TypeApp
+        TypeBastion: !Ref TypeBastion
+        SpaceChar: !Ref SpaceChar
+        AvailabilityZone1: !Ref AvailabilityZone1
+        AvailabilityZone2: !Ref AvailabilityZone2
+        VpcName: !Ref VpcName
+        VpcCidrBlock: !Ref VpcCidrBlock
+        FrontSubnetName: !Ref FrontSubnetName
+        FrontSubnet1CidrBlock: !Ref FrontSubnet1CidrBlock
+        FrontSubnet2CidrBlock: !Ref FrontSubnet2CidrBlock
+        BastionSubnetName: !Ref BastionSubnetName
+        BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
+        AppSubnetName: !Ref AppSubnetName
+        AppSubnet1CidrBlock: !Ref AppSubnet1CidrBlock
+        AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
+        InternetGatewayName: !Ref InternetGatewayName
+        FrontRTName: !Ref FrontRTName
+        NatEIPName: !Ref NatEIPName
+        NatGatewayName: !Ref NatGatewayName
+        NatRTName: !Ref NatRTName
+        DefaultSecurityGroup: !Ref DefaultSecurityGroup
+        SshSecurityGroup: !Ref SshSecurityGroup
+        FrontSecurityGroup: !Ref FrontSecurityGroup
+        AppSecurityGroup: !Ref AppSecurityGroup
+
+        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
+        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
+        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
+        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
+        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
+        MyFrontSGId: !GetAtt VPC.Outputs.MyFrontSGId
+#        CodeDeployEc2RoleProfileId: !GetAtt CodeDeploy.Outputs.CodeDeployEc2RoleProfileId
+
+
+
 #  RDS:
 #    Type: AWS::CloudFormation::Stack
 #    Properties:
@@ -209,20 +278,20 @@ Resources:
 #        AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
-  BeansTalk:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
-      Parameters:
-        SystemName: !Ref SysName
-        Environment: !Ref Env
-        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
-        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
-        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
-        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
-        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-        SSLCertificateId: !Ref SSLCertificateId
+#  BeansTalk:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/beanstalk.yaml
+#      Parameters:
+#        SystemName: !Ref SysName
+#        Environment: !Ref Env
+#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+#        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
+#        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
+#        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
+#        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
+#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+#        SSLCertificateId: !Ref SSLCertificateId
 
 #  Lambda:
 #    Type: AWS::CloudFormation::Stack
@@ -290,3 +359,9 @@ Outputs:
     Value: !Ref FrontSecurityGroup
   AppSecurityGroup:
     Value: !Ref AppSecurityGroup
+  BucketForBuildedSource:
+    Value: !Ref BucketForBuildedSource
+  BuildedSource:
+    Value: !Ref BuildedSource
+  DeployDestinationEC2Name:
+    Value: !Ref DeployDestinationEC2Name

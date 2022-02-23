@@ -1,5 +1,23 @@
 AWSTemplateFormatVersion: 2010-09-09
 
+Parameters:
+  SysName:
+    Type: String
+  Env:
+    Type: String
+    AllowedValues:
+      - Prod
+      - Stg
+      - dev
+  SpaceChar:
+    Type: String
+    Default: '-'
+  BucketForBuildedSource:
+    Type: String
+  BuildedSource:
+    Type: String
+  DeployDestinationEC2Name:
+    Type: String
 
 Resources:
 
@@ -19,71 +37,30 @@ Resources:
         - arn:aws:iam::aws:policy/AWSCodeDeployDeployerAccess
         - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
 
-  CodeDeployEc2Role:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName : codedeploy-ec2-role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Path: /
-
-  CodeDeployEc2RolePolicies:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: codedeploy-ec2-role-policies
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - "s3:Get*"
-              - "s3:List*"
-            Effect: Allow
-            Resource: "*"
-      Roles:
-        - !Ref CodeDeployEc2Role
-
-  CodeDeployEc2RoleProfile:
-    Type: AWS::IAM::InstanceProfile
-    Properties:
-      Path: /
-      Roles:
-        - !Ref CodeDeployEc2Role
-
   CodeDeployApplication:
     Type: AWS::CodeDeploy::Application
     Properties:
-      ApplicationName: helloWorld
+      ApplicationName: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}application${SpaceChar}'
       ComputePlatform: Server
 
   CodeDeployDeploymentGroup:
     Type: AWS::CodeDeploy::DeploymentGroup
     Properties:
-      ApplicationName: helloWorld
+      ApplicationName: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}application${SpaceChar}'
       Deployment:
         Revision:
           RevisionType: S3
           S3Location:
-            Bucket: my-beanstalk-tokyo
+            Bucket: !Ref BucketForBuildedSource
             BundleType: zip
-            Key: helloworld-0.0.1-SNAPSHOT.jar
+            Key: !Ref BuildedSource
       DeploymentConfigName: CodeDeployDefault.OneAtATime
-      DeploymentGroupName: helloWorld-DeploymentGroup
+      DeploymentGroupName: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}deployment${SpaceChar}group'
       DeploymentStyle:
         DeploymentOption: WITHOUT_TRAFFIC_CONTROL
         DeploymentType: IN_PLACE
       Ec2TagFilters:
         - Key: Name
           Type: KEY_AND_VALUE
-          Value: helloWorld-dev-app
+          Value: !Ref DeployDestinationEC2Name
       ServiceRoleArn: !GetAtt CodeDeployServiceRole.Arn
-      
-Outputs:
-  CodeDeployEc2RoleProfileId:
-    Value: !Ref CodeDeployEc2RoleProfile
