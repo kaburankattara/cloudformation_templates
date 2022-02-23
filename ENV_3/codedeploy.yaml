@@ -52,7 +52,7 @@ Resources:
   CodeDeployEc2RoleProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
-      Path: "/"
+      Path: /
       Roles:
         - !Ref CodeDeployEc2Role
 
