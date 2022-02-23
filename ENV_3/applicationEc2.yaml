@@ -113,10 +113,44 @@ Parameters:
   MyFrontSGId:
     Type: String
 
-  CodeDeployEc2RoleProfileId:
-    Type: String
-
 Resources:
+
+  CodeDeployEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : codedeploy-ec2-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+
+  CodeDeployEc2RolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: codedeploy-ec2-role-policies
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - "s3:Get*"
+              - "s3:List*"
+            Effect: Allow
+            Resource: "*"
+      Roles:
+        - !Ref CodeDeployEc2Role
+
+  CodeDeployEc2RoleProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref CodeDeployEc2Role
 
   LaunchTemplate:
     Type: AWS::EC2::LaunchTemplate
@@ -161,89 +195,4 @@ Resources:
         LaunchTemplateId: !Ref LaunchTemplate
         Version: !GetAtt LaunchTemplate.LatestVersionNumber
       IamInstanceProfile:
-        !Ref CodeDeployEc2RoleProfileId
-
-
-
-
-
-
-#  AWSCodeDeployDeployerAccessRole:
-#    Type: "AWS::IAM::Role"
-#    Properties:
-#      AssumeRolePolicyDocument:
-#        Version: "2012-10-17"
-#        Statement:
-#          -
-#            Effect: "Allow"
-#            Principal:
-#              Service:
-#                - "ec2.amazonaws.com"
-#                - "codedeploy.amazonaws.com"
-#            Action:
-#              - "sts:AssumeRole"
-#      Path: "/"
-#
-#  AWSCodeDeployDeployerAccessPolicies:
-#    Type: AWS::IAM::Policy
-#    Properties:
-#      PolicyName: AWSCodeDeployDeployerAccess
-#      PolicyDocument:
-#        Version: '2012-10-17'
-#        Statement:
-#          - Action:
-#              - "codedeploy:Batch*"
-#              - "codedeploy:CreateDeployment"
-#              - "codedeploy:Get*"
-#              - "codedeploy:List*"
-#              - "codedeploy:RegisterApplicationRevision"
-#            Effect: "Allow"
-#            Resource: "*"
-#          - Action:
-#              - "s3:Get*"
-#              - "s3:List*"
-#            Effect: "Allow"
-#            Resource: "arn:aws:s3:::codepipeline-ap-northeast-1-174083252899/*"
-#          - Action:
-#              - "ec2:*"
-#            Effect: "Allow"
-#            Resource: "*"
-#          - Sid: "CodeStarNotificationsReadWriteAccess"
-#            Effect: "Allow"
-#            Action:
-#              - "codestar-notifications:CreateNotificationRule"
-#              - "codestar-notifications:DescribeNotificationRule"
-#              - "codestar-notifications:UpdateNotificationRule"
-#              - "codestar-notifications:Subscribe"
-#              - "codestar-notifications:Unsubscribe"
-#            Resource: "*"
-#            Condition:
-#              StringLike:
-#                codestar-notifications:NotificationsForResource: "arn:aws:codedeploy:*"
-#          - Sid: "CodeStarNotificationsListAccess"
-#            Effect: "Allow"
-#            Action:
-#              - "codestar-notifications:ListNotificationRules"
-#              - "codestar-notifications:ListTargets"
-#              - "codestar-notifications:ListTagsforResource"
-#              - "codestar-notifications:ListEventTypes"
-#            Resource: "*"
-#          - Sid: "CodeStarNotificationsChatbotAccess"
-#            Effect: "Allow"
-#            Action:
-#              - "chatbot:DescribeSlackChannelConfigurations"
-#            Resource: "*"
-#          - Sid: "SNSTopicListAccess"
-#            Effect: "Allow"
-#            Action:
-#              - "sns:ListTopics"
-#            Resource: "*"
-#      Roles:
-#        - !Ref AWSCodeDeployDeployerAccessRole
-#
-#  AWSCodeDeployDeployerAccessInstanceProfile:
-#    Type: AWS::IAM::InstanceProfile
-#    Properties:
-#      Path: "/"
-#      Roles:
-#        - !Ref AWSCodeDeployDeployerAccessRole
+        !Ref CodeDeployEc2RoleProfile
