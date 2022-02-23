@@ -19,19 +19,6 @@ Resources:
         - arn:aws:iam::aws:policy/AWSCodeDeployDeployerAccess
         - arn:aws:iam::aws:policy/service-role/AWSCodeDeployRole
 
-#  CodeDeployServiceRolePolicies:
-#    Type: AWS::IAM::Policy
-#    Properties:
-#      PolicyName: CreateDeployment-Policy
-#      PolicyDocument:
-#        Version: 2012-10-17
-#        Statement:
-#          - Effect: Allow
-#            Action: codedeploy:CreateDeployment
-#            Resource: "*"
-#      Roles:
-#        - !Ref CodeDeployServiceRole
-
   CodeDeployEc2Role:
     Type: AWS::IAM::Role
     Properties:
