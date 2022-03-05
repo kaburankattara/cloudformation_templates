@@ -1,0 +1,203 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  SysName:
+    Type: String
+    Default: 'helloWorld'
+  ArtifactBucket:
+    Type: String
+    Default: 'my-beanstalk-tokyo'
+
+  CodeBuildProjectName:
+    Type: String
+    Default: 'helloWorld'
+  RepositoryUrl:
+    Type: String
+    Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
+  S3BucketName:
+    Type: String
+    Default: 'my-beanstalk-tokyo'
+
+Resources:
+
+  SourceConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: !Sub ${SysName}-Con
+      ProviderType: GitHub
+
+  Pipeline:
+    Type: AWS::CodePipeline::Pipeline
+    Properties:
+      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      ArtifactStore:
+        Type: S3
+        Location: !Ref ArtifactBucket
+      Stages:
+        - Name: Source
+          Actions:
+            - Name: SourceAction
+              ActionTypeId:
+                Category: Source
+                Owner: AWS
+                Version: 1
+                Provider: CodeStarSourceConnection
+              Configuration:
+                ConnectionArn: !Ref SourceConnection
+#                  !Sub
+#                  - 'arn:aws:codestar-connections:${AWS::Region}:${AWS::AccountId}:connection/${connection_id}'
+#                  - connection_id: !Ref SourceConnection
+                # ConnectionArn: !GetAtt SourceConnection.Arn
+                FullRepositoryId: "kaburankattara/helloworldBySpringBoot"
+                BranchName: master
+                OutputArtifactFormat: CODE_ZIP
+              RunOrder: 1
+              OutputArtifacts:
+                - Name: App
+        - Name: Build
+          Actions:
+            - Name: Build
+              ActionTypeId:
+                Category: Build
+                Owner: AWS
+                Version: 1
+                Provider: CodeBuild
+              Configuration:
+                ProjectName: !Ref CodeBuildProject
+              RunOrder: 1
+              InputArtifacts:
+                - Name: App
+              OutputArtifacts:
+                - Name: MyApp
+#        - Name: Deploy
+#          Actions:
+#            - Name: Deploy
+#              ActionTypeId:
+#                Category: Deploy
+#                Owner: AWS
+#                Version: 1
+#                Provider: CodeDeploy
+#              Configuration:
+#                ApplicationName: !Ref CodeDeployAplication
+#                DeploymentGroupName: !Ref CodeDeployGroup
+#              RunOrder: 1
+#              InputArtifacts:
+#                - Name: MyApp
+
+  CodePipelineServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codepipeline.amazonaws.com
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: root
+          PolicyDocument:
+            Version: 2012-10-17
+            Statement:
+              - Resource:
+                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
+                Effect: Allow
+                Action:
+                  - s3:PutObject
+                  - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectVersion
+                  - s3:GetBucketVersioning
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codebuild:StartBuild
+                  - codebuild:StopBuild
+                  - codebuild:BatchGet*
+                  - codebuild:Get*
+                  - codebuild:List*
+                  - codecommit:GetBranch
+                  - codecommit:GetCommit
+                  - codecommit:GetRepository
+                  - codecommit:ListBranches
+                  - codecommit:GetUploadArchiveStatus
+                  - codecommit:UploadArchive
+                  - codecommit:CancelUploadArchive
+                  - codedeploy:CreateDeployment
+                  - codedeploy:GetApplicationRevision
+                  - codedeploy:GetDeployment
+                  - codedeploy:GetDeploymentConfig
+                  - codedeploy:RegisterApplicationRevision
+                  - s3:GetBucketLocation
+                  - s3:ListAllMyBuckets
+                  - iam:PassRole
+              - Resource: "arn:aws:ssm:*:*:parameter/CodeBuild/*"
+                Effect: Allow
+                Action:
+                  - ssm:PutParameter
+              - Resource: "*"
+                Effect: Allow
+                Action:
+                  - codestar-connections:UseConnection
+
+
+
+  CodebuildRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : aws-codebuild-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: codebuild.amazonaws.com
+            Action: sts:AssumeRole
+
+  BuildPolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: codebuild-polocy
+      Roles:
+        - !Ref CodebuildRole
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Action:
+              - logs:*
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - s3:*
+            Resource: '*'
+          - Effect: Allow
+            Action:
+              - codebuild:*
+            Resource: '*'
+
+  CodeBuildProject:
+    Type: AWS::CodeBuild::Project
+    Properties:
+      Name: !Ref CodeBuildProjectName
+      Description: A description about my project
+      ServiceRole: !GetAtt CodebuildRole.Arn
+      Artifacts:
+        Type: S3
+        Location: !Ref S3BucketName
+        Name: /
+      Environment:
+        Type: LINUX_CONTAINER
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
+      # 環境変数
+      #        EnvironmentVariables:
+      #          - Name: varName
+      #            Type: varType
+      #            Value: varValue
+      Source:
+        Auth:
+          Type: OAUTH
+        Location: !Ref RepositoryUrl
+        Type: GITHUB
