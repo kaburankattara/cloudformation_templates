@@ -13,7 +13,7 @@ Parameters:
     Default: 'helloWorld'
   RepositoryUrl:
     Type: String
-    Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
+    Default: ''
   S3BucketName:
     Type: String
     Default: 'my-beanstalk-tokyo'
@@ -44,11 +44,7 @@ Resources:
                 Provider: CodeStarSourceConnection
               Configuration:
                 ConnectionArn: !Ref SourceConnection
-#                  !Sub
-#                  - 'arn:aws:codestar-connections:${AWS::Region}:${AWS::AccountId}:connection/${connection_id}'
-#                  - connection_id: !Ref SourceConnection
-                # ConnectionArn: !GetAtt SourceConnection.Arn
-                FullRepositoryId: "kaburankattara/helloworldBySpringBoot"
+                FullRepositoryId: ""
                 BranchName: master
                 OutputArtifactFormat: CODE_ZIP
               RunOrder: 1
