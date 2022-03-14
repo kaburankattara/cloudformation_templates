@@ -1,0 +1,113 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  SysName:
+    Type: String
+  Env:
+    Type: String
+    AllowedValues:
+      - Prod
+      - Stg
+      - dev
+  TypeApp:
+    Type: String
+    Default: app
+  SpaceChar:
+    Type: String
+    Default: '-'
+  MyAppSubnet1Id:
+    Type: String
+  MyAppSGId:
+    Type: String
+
+Resources:
+
+  CodeDeployEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName : codedeploy-ec2-role
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: /
+
+  CodeDeployEc2RolePolicies:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: codedeploy-ec2-role-policies
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Action:
+              - "s3:Get*"
+              - "s3:List*"
+            Effect: Allow
+            Resource: "*"
+      Roles:
+        - !Ref CodeDeployEc2Role
+
+  CodeDeployEc2RoleProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: /
+      Roles:
+        - !Ref CodeDeployEc2Role
+
+  LaunchTemplate:
+    Type: AWS::EC2::LaunchTemplate
+    Properties:
+      LaunchTemplateName: sample-launch-template
+      LaunchTemplateData:
+        UserData:
+          Fn::Base64: !Sub
+            - |
+              #!/bin/bash
+
+              yum -y update > /home/ec2-user/update-result.txt
+              yum -y install ruby > /home/ec2-user/ruby-result.txt
+              yum -y install wget > /home/ec2-user/wget-install-result.txt
+
+              cd /home/ec2-user
+              wget https://aws-codedeploy-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/latest/install
+              chmod +x ./install
+              ./install auto
+              service codedeploy-agent status > /home/ec2-user/codedeploy-agent-install-result.txt
+
+            - {
+              FileName: LaunchTemplate
+            }
+
+  MyAppInstance1:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      ImageId: ami-07b4f72c4c356c19d
+      InstanceType: t3.nano
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyAppSubnet1Id
+          GroupSet:
+            - !Ref MyAppSGId
+          AssociatePublicIpAddress: false
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeApp}'
+      LaunchTemplate:
+        LaunchTemplateId: !Ref LaunchTemplate
+        Version: !GetAtt LaunchTemplate.LatestVersionNumber
+      IamInstanceProfile:
+        !Ref CodeDeployEc2RoleProfile
+
+Outputs:
+  MyAppInstance1Arn:
+    Value: !Sub
+      - 'arn:aws:ec2:${AWS::Region}:${AWS::AccountId}:instance/${MyAppInstance1}'
+      - MyAppInstance1: !Ref MyAppInstance1
+  MyAppInstance1Id:
+    Value: !Ref MyAppInstance1

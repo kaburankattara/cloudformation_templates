@@ -1,0 +1,309 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  Environment:
+    Description: Type of this environment.
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+  SystemName:
+    Description: Name of this system.
+    Type: String
+    Default: my-Lambda
+  SpaceChar:
+    Type: String
+    Default: '-'
+
+  MyVpcId:
+    Type: String
+  MyAppSubnetId:
+    Type: String
+  InstanceArn:
+    Type: String
+  InstanceId:
+    Type: String
+
+Resources:
+
+  LambdaEvent:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: String
+      Name: execLambda
+      RoleArn: !GetAtt MyLambdaRole.Arn
+      ScheduleExpression: cron(00,30 0-14,21-23 * * ? *)
+      State: ENABLED
+      Targets:
+        - Arn: !GetAtt MyLambda.Arn
+          Id: lambda
+
+  MyLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Runtime: python3.9
+      Role: !GetAtt MyLambdaRole.Arn
+      Handler: index.lambda_handler
+      Code:
+        ZipFile: |
+          import urllib
+          import urllib.request
+          import html.parser
+          from socket import error as SocketError
+          from http.cookiejar import CookieJar
+
+          def lambda_handler(func,*args):
+              try:
+                  req=urllib.request.Request('https://www.google.com/?hl=ja', None, {'User-Agent': 'Mozilla/5.0 (X11; Linux i686; G518Rco3Yp0uLV40Lcc9hAzC1BOROTJADjicLjOmlr4=) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.157 Safari/537.36','Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8','Accept-Charset': 'ISO-8859-1,utf-8;q=0.7,*;q=0.3','Accept-Encoding': 'gzip, deflate, sdch','Accept-Language': 'en-US,en;q=0.8','Connection': 'keep-alive'})
+                  cj = CookieJar()
+                  opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cj))
+                  response = opener.open(req)
+                  print(response)
+                  response.close()
+              except urllib.request.HTTPError as inst:
+                  output = format(inst)
+                  print(output)
+      Description: Invoke a function during stack creation.
+      TracingConfig:
+        Mode: Active
+      VpcConfig:
+        SecurityGroupIds:
+          - !Ref LambdaSG
+        SubnetIds:
+          - !Ref MyAppSubnetId
+
+
+  LambdaSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${SystemName}${SpaceChar}${Environment}${SpaceChar}Lambda${SpaceChar}sg'
+      GroupName: !Sub '${SystemName}${SpaceChar}${Environment}${SpaceChar}Lambda${SpaceChar}sg'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}${SpaceChar}${Environment}${SpaceChar}Lambda${SpaceChar}sg'
+      VpcId: !Ref MyVpcId
+
+  Ec2StartRule:
+    Type: AWS::Events::Rule
+    DeletionPolicy: Retain
+    Properties:
+      Name: !Sub ec2-start-${Environment}
+      Description: ScheduledRule
+#      ScheduleExpression: !Sub cron(00,30 0-14,21-23 * * ? *)
+      ScheduleExpression: !Sub cron(*/5 *,* * * ? *)
+      State: ENABLED
+      RoleArn: !GetAtt EventsRuleRole.Arn
+      Targets:
+        - Arn: arn:aws:ssm:ap-northeast-1::automation-definition/AWS-StartEC2Instance:$DEFAULT
+          Id: !Sub ec2-start-${Environment}
+          RoleArn: !Sub ${EventsRuleRole.Arn}
+          Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"],\"AutomationAssumeRole\":[\"${StartEc2Role2.Arn}\"]}"
+
+#          Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"],\"AutomationAssumeRole\":[\"${EC2AmazonSSMAutomationRole.Arn}\"]}"
+#        - Arn: "arn:aws:ssm:ap-northeast-1::automation-definition/AWS-StartEC2Instance:$DEFAULT"
+#          Id: StartEc2
+#          RoleArn: !GetAtt Ec2StartStopRole.Arn
+#          Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"]}"
+#          Input: !Sub
+#            - '{"input_InstanceId":"${InstanceId}"}'
+#            - InstanceId: !Ref InstanceId
+
+  StartEc2Role2:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "StartEC2Role2"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+                - ssm.amazonaws.com
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: Ec2StartStopPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: "lambda:InvokeFunction"
+                Resource: "arn:aws:lambda:*:*:function:Automation*"
+              - Effect: Allow
+                Action:
+                  - "ec2:StartInstances"
+                  - "ec2:RebootInstances"
+                  - "ec2:StopInstances"
+                  - "ec2:TerminateInstancesInstances"
+                Resource: "*"
+              - Effect: Allow
+                Action: "ssm:*"
+                Resource: "*"
+      Path: /
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
+
+  EventsRuleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "EventsRuleRole"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "events.amazonaws.com"
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: EventsRuleRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action: "ssm:StartAutomationExecution"
+                Effect: "Allow"
+                Resource:
+                  - "arn:aws:ssm:ap-northeast-1:*:automation-definition/AWS-StartEC2Instance:$DEFAULT"
+              - Effect: "Allow"
+                Action:
+                  - "iam:PassRole"
+                Resource: "*"
+      Path: /
+
+
+
+
+
+
+
+  StartEc2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "StartEC2Role"
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - "events.amazonaws.com"
+            Action:
+              - sts:AssumeRole
+      Path: /
+      Policies:
+        - PolicyName: StartEc2Role_policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - ssm:StartAutomationExecution
+                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:automation-definition/AWS-StartEC2Instance:$DEFAULT
+              - Effect: Allow
+                Action: "iam:PassRole"
+                Resource: !GetAtt EC2AmazonSSMAutomationRole.Arn
+                Condition:
+                  StringLikeIfExists:
+                    iam:PassedToService: ssm.amazonaws.com
+
+  EC2AmazonSSMAutomationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ssm.amazonaws.com
+                - ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
+      Path: "/"
+
+  Ec2StartStopRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub ec2-start-stop-${Environment}
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: "Allow"
+            Principal:
+              Service:
+                - "events.amazonaws.com"
+                - "ec2.amazonaws.com"
+            Action: "sts:AssumeRole"
+      Description:
+        Describe what you want
+      Policies:
+        - PolicyName: Ec2StartStopPolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action: "lambda:InvokeFunction"
+                Resource: "arn:aws:lambda:*:*:function:Automation*"
+              - Effect: Allow
+                Action:
+                  - "ec2:StartInstances"
+                  - "ec2:RebootInstances"
+                  - "ec2:StopInstances"
+                  - "ec2:TerminateInstancesInstances"
+                Resource: "*"
+              - Effect: Allow
+                Action: "ssm:*"
+                Resource: "*"
+
+
+
+  MyLambdaRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: Lambda role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
+      Path: "/"
+      RoleName: "LambdaRole"
+
+  LambdaPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref MyLambda
+      Principal: events.amazonaws.com
+      SourceArn: !GetAtt LambdaEvent.Arn
