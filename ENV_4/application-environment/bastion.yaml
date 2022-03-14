@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  SysName:
+    Type: String
+  Env:
+    Type: String
+    AllowedValues:
+      - Prod
+      - Stg
+      - dev
+  TypeBastion:
+    Type: String
+    Default: bastion
+  SpaceChar:
+    Type: String
+    Default: '-'
+  MyBastionSubnetId:
+    Type: String
+  MySshSGId:
+    Type: String
+
+Resources:
+
+  MyBastionInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-07b4f72c4c356c19d
+      InstanceType: t2.micro
+      KeyName: cassandra2
+      NetworkInterfaces:
+        - SubnetId: !Ref MyBastionSubnetId
+          GroupSet:
+            - !Ref MySshSGId
+          AssociatePublicIpAddress: true
+          DeviceIndex: 0
+      Tags:
+        - Key: Name
+          Value: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}${TypeBastion}'

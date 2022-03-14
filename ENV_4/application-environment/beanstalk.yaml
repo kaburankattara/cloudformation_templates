@@ -1,0 +1,311 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  Environment:
+    Description: Type of this environment.
+    Type: String
+    Default: prod
+    AllowedValues:
+      - prod
+      - staging
+      - dev
+  SystemName:
+    Description: Name of this system.
+    Type: String
+    Default: my-beanstalk
+  MyVpcId:
+    Type: String
+  MyAppSubnet1Id:
+    Type: String
+  MyAppSubnet2Id:
+    Type: String
+  MyFrontSubnet1Id:
+    Type: String
+  MyFrontSubnet2Id:
+    Type: String
+  MyAppSGId:
+    Type: String
+  # 証明書のARN
+  SSLCertificateId:
+    Type: String
+
+Resources:
+  sampleApplication:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName : !Sub '${SystemName}-${Environment}-application'
+      Description: AWS Elastic Beanstalk Sample Application
+
+  sampleApplicationVersion:
+    Type: AWS::ElasticBeanstalk::ApplicationVersion
+    Properties:
+      ApplicationName:
+        Ref: sampleApplication
+      Description: AWS ElasticBeanstalk Sample Application Version
+      SourceBundle:
+        S3Bucket: !Sub "my-beanstalk-tokyo"
+        S3Key: helloworld-0.0.1-SNAPSHOT.jar
+
+  sampleConfigurationTemplate:
+    Type: AWS::ElasticBeanstalk::ConfigurationTemplate
+    Properties:
+      ApplicationName:
+        Ref: sampleApplication
+      Description: AWS ElasticBeanstalk Sample Configuration Template
+      OptionSettings:
+        - Namespace: aws:elasticbeanstalk:hostmanager
+          OptionName: LogPublicationControl
+          Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: StreamLogs
+          Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: RetentionInDays
+          Value: 90
+        - Namespace: aws:elasticbeanstalk:application
+          OptionName: Application Healthcheck URL
+          Value: /
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: sysDateConf
+          Value: 20220103
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: MonitoringInterval
+          Value: 1 minute
+        - Namespace: aws:autoscaling:asg
+          OptionName: MinSize
+          Value: 2
+        - Namespace: aws:autoscaling:asg
+          OptionName: MaxSize
+          Value: 3
+        - Namespace: aws:ec2:instances
+          OptionName: InstanceTypes
+          Value: t3.nano
+        - Namespace: aws:autoscaling:trigger
+          OptionName: MeasureName
+          Value: CPUUtilization
+        - Namespace: aws:autoscaling:trigger
+          OptionName: Unit
+          Value: Percent
+        - Namespace: aws:autoscaling:trigger
+          OptionName: UpperThreshold
+          Value: 50
+        - Namespace: aws:autoscaling:trigger
+          OptionName: LowerThreshold
+          Value: 10
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: MinSize
+          Value: 2
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: MaxSize
+          Value: 4
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: StartTime
+          Value: 2019-04-18T15:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: Recurrence
+          Value: 0 21 * * 0-6
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: bussinessHours
+          OptionName: EndTime
+          Value: 2099-04-19T15:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: MinSize
+          Value: 0
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: MaxSize
+          Value: 0
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: Recurrence
+          Value: 30 14 * * *
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: StartTime
+          Value: 2019-04-19T14:00:00Z
+        - Namespace: aws:autoscaling:scheduledaction
+          ResourceName: outsideHours
+          OptionName: EndTime
+          Value: 2099-04-19T15:00:00Z
+        - Namespace: aws:elasticbeanstalk:command
+          OptionName: DeploymentPolicy
+          Value: RollingWithAdditionalBatch
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: RollingUpdateEnabled
+          Value: true
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: RollingUpdateType
+          Value: Health
+        - Namespace: aws:autoscaling:updatepolicy:rollingupdate
+          OptionName: MinInstancesInService
+          Value: 1
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: EC2KeyName
+          Value: cassandra2
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Ref MyInstanceProfile
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: ServiceRole
+          Value: !Ref MyServiceRole
+        - Namespace: aws:elasticbeanstalk:healthreporting:system
+          OptionName: SystemType
+          Value: basic
+        - Namespace: aws:elasticbeanstalk:managedactions
+          OptionName: ManagedActionsEnabled
+          Value: false
+        - Namespace: aws:elasticbeanstalk:sns:topics
+          OptionName: Notification Endpoint
+          Value: a@a
+        - Namespace: aws:elasticbeanstalk:environment
+          OptionName: EnvironmentType
+          Value: LoadBalanced
+      SolutionStackName: 64bit Amazon Linux 2 v3.2.12 running Corretto 8
+
+  sampleEnvironment:
+    Type: AWS::ElasticBeanstalk::Environment
+    DependsOn: MyELBSG
+    Properties:
+      EnvironmentName : !Sub '${SystemName}-${Environment}'
+      ApplicationName: !Ref sampleApplication
+      Description: AWS ElasticBeanstalk Sample Environment
+      TemplateName: !Ref sampleConfigurationTemplate
+      VersionLabel: !Ref sampleApplicationVersion
+      OptionSettings:
+        - Namespace : aws:ec2:vpc
+          OptionName : VPCId
+          Value : !Ref MyVpcId
+        - Namespace : aws:ec2:vpc
+          OptionName: Subnets
+          Value : !Sub '${MyAppSubnet1Id}, ${MyAppSubnet2Id}'
+        - Namespace : aws:ec2:vpc
+          OptionName: ELBSubnets
+          Value : !Sub '${MyFrontSubnet1Id}, ${MyFrontSubnet2Id}'
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: SecurityGroups
+          Value : !Ref MyBeansTalkAppSG
+        - Namespace : aws:elb:loadbalancer
+          OptionName: SecurityGroups
+          Value : !Ref MyELBSG
+        - Namespace: aws:elb:loadbalancer
+          OptionName: ManagedSecurityGroup
+          Value: !Ref MyELBSG
+        - Namespace: aws:elb:listener
+          OptionName: ListenerEnabled
+          Value: false
+        - Namespace: aws:elb:listener:443
+          OptionName: ListenerProtocol
+          Value: HTTPS
+        - Namespace: aws:elb:listener:443
+          OptionName: InstancePort
+          Value: 80
+        - Namespace: aws:elb:listener:443
+          OptionName: SSLCertificateId
+          Value: !Ref SSLCertificateId
+        - Namespace: aws:elb:listener:443
+          OptionName: ListenerEnabled
+          Value: true
+        - Namespace: aws:elasticbeanstalk:cloudwatch:logs
+          OptionName: StreamLogs
+          Value: true
+
+
+  MyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - elasticbeanstalk.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: Beanstalk EC2 role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSElasticBeanstalkEnhancedHealth
+        - arn:aws:iam::aws:policy/AWSElasticBeanstalkManagedUpdatesCustomerRolePolicy
+      RoleName : aws-elasticbeanstalk-service-role
+
+  MyInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ec2.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Description: Beanstalk EC2 role
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier
+        - arn:aws:iam::aws:policy/AWSElasticBeanstalkMulticontainerDocker
+        - arn:aws:iam::aws:policy/AWSElasticBeanstalkWorkerTier
+      RoleName : aws-elasticbeanstalk-ec2-role
+
+  MyInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      InstanceProfileName: aws-elasticbeanstalk-instanceprofile
+      Roles:
+        - !Ref MyInstanceRole
+
+
+  MyELBSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${SystemName}-${Environment}-elb-sg'
+      GroupName: !Sub '${SystemName}-${Environment}-elb-sg'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 443
+          IpProtocol: tcp
+          ToPort: 443
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-elb-sg'
+      VpcId: !Ref MyVpcId
+
+
+  MyBeansTalkAppSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
+      GroupName: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
+      SecurityGroupEgress:
+        - CidrIp: 0.0.0.0/0
+          Description: outbound
+          FromPort: -1
+          IpProtocol: -1
+          ToPort: -1
+      SecurityGroupIngress:
+        - SourceSecurityGroupId: !GetAtt MyELBSG.GroupId
+          Description: inbound
+          FromPort: 80
+          IpProtocol: tcp
+          ToPort: 80
+        - CidrIp: 0.0.0.0/0
+          Description: inbound
+          FromPort: 22
+          IpProtocol: tcp
+          ToPort: 22
+      Tags:
+        - Key: Name
+          Value: !Sub '${SystemName}-${Environment}-beanstalk-app-sg'
+      VpcId: !Ref MyVpcId
