@@ -74,7 +74,6 @@ Resources:
         SubnetIds:
           - !Ref MyAppSubnetId
 
-
   LambdaSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -101,87 +100,6 @@ Resources:
         - Key: Name
           Value: !Sub '${SystemName}${SpaceChar}${Environment}${SpaceChar}Lambda${SpaceChar}sg'
       VpcId: !Ref MyVpcId
-
-  Ec2StartRule:
-    Type: AWS::Events::Rule
-    DeletionPolicy: Retain
-    Properties:
-      Name: !Sub ec2-start-${Environment}
-      Description: ScheduledRule
-#      ScheduleExpression: !Sub cron(00,30 0-14,21-23 * * ? *)
-      ScheduleExpression: !Sub cron(*/5 *,* * * ? *)
-      State: ENABLED
-      RoleArn: !GetAtt EventsRuleRole.Arn
-      Targets:
-        - Arn: arn:aws:ssm:ap-northeast-1::automation-definition/AWS-StartEC2Instance:$DEFAULT
-          Id: !Sub ec2-start-${Environment}
-          RoleArn: !Sub ${EventsRuleRole.Arn}
-          Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"],\"AutomationAssumeRole\":[\"${StartEc2Role2.Arn}\"]}"
-
-  StartEc2Role2:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: "StartEC2Role2"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - events.amazonaws.com
-                - ssm.amazonaws.com
-                - ec2.amazonaws.com
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: Ec2StartStopPolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Effect: Allow
-                Action: "lambda:InvokeFunction"
-                Resource: "arn:aws:lambda:*:*:function:Automation*"
-              - Effect: Allow
-                Action:
-                  - "ec2:StartInstances"
-                  - "ec2:RebootInstances"
-                  - "ec2:StopInstances"
-                  - "ec2:TerminateInstancesInstances"
-                Resource: "*"
-              - Effect: Allow
-                Action: "ssm:*"
-                Resource: "*"
-      Path: /
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
-
-  EventsRuleRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName: "EventsRuleRole"
-      AssumeRolePolicyDocument:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - "events.amazonaws.com"
-            Action:
-              - sts:AssumeRole
-      Policies:
-        - PolicyName: EventsRuleRolePolicy
-          PolicyDocument:
-            Version: '2012-10-17'
-            Statement:
-              - Action: "ssm:StartAutomationExecution"
-                Effect: "Allow"
-                Resource:
-                  - "arn:aws:ssm:ap-northeast-1:*:automation-definition/AWS-StartEC2Instance:$DEFAULT"
-              - Effect: "Allow"
-                Action:
-                  - "iam:PassRole"
-                Resource: "*"
-      Path: /
 
   MyLambdaRole:
     Type: AWS::IAM::Role
@@ -211,90 +129,62 @@ Resources:
       Principal: events.amazonaws.com
       SourceArn: !GetAtt LambdaEvent.Arn
 
+  Ec2StartRule:
+    Type: AWS::Events::Rule
+    DeletionPolicy: Retain
+    Properties:
+      Name: !Sub ec2-start-${Environment}
+      Description: ScheduledRule
+#      ScheduleExpression: !Sub cron(00,30 0-14,21-23 * * ? *)
+      ScheduleExpression: !Sub cron(*/5 *,* * * ? *)
+      State: ENABLED
+      RoleArn: !GetAtt EventsRuleRole.Arn
+      Targets:
+        - Arn: arn:aws:ssm:ap-northeast-1::automation-definition/AWS-StartEC2Instance:$DEFAULT
+          Id: !Sub ec2-start-${Environment}
+          RoleArn: !Sub ${EventsRuleRole.Arn}
+          Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"],\"AutomationAssumeRole\":[\"${AmazonSSMAutomationRole.Arn}\"]}"
 
+  AmazonSSMAutomationRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "AmazonSSMAutomationRole"
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - ssm.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
 
-
-
-
-#  StartEc2Role:
-#    Type: AWS::IAM::Role
-#    Properties:
-#      RoleName: "StartEC2Role"
-#      AssumeRolePolicyDocument:
-#        Version: "2012-10-17"
-#        Statement:
-#          - Effect: Allow
-#            Principal:
-#              Service:
-#                - "events.amazonaws.com"
-#            Action:
-#              - sts:AssumeRole
-#      Path: /
-#      Policies:
-#        - PolicyName: StartEc2Role_policy
-#          PolicyDocument:
-#            Version: '2012-10-17'
-#            Statement:
-#              - Effect: Allow
-#                Action:
-#                  - ssm:StartAutomationExecution
-#                Resource: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:automation-definition/AWS-StartEC2Instance:$DEFAULT
-#              - Effect: Allow
-#                Action: "iam:PassRole"
-#                Resource: !GetAtt EC2AmazonSSMAutomationRole.Arn
-#                Condition:
-#                  StringLikeIfExists:
-#                    iam:PassedToService: ssm.amazonaws.com
-#
-#  EC2AmazonSSMAutomationRole:
-#    Type: AWS::IAM::Role
-#    Properties:
-#      AssumeRolePolicyDocument:
-#        Version: '2012-10-17'
-#        Statement:
-#          - Effect: Allow
-#            Principal:
-#              Service:
-#                - ssm.amazonaws.com
-#                - ec2.amazonaws.com
-#            Action: sts:AssumeRole
-#      ManagedPolicyArns:
-#        - arn:aws:iam::aws:policy/service-role/AmazonSSMAutomationRole
-#      Path: "/"
-
-#  Ec2StartStopRole:
-#    Type: AWS::IAM::Role
-#    Properties:
-#      RoleName: !Sub ec2-start-stop-${Environment}
-#      AssumeRolePolicyDocument:
-#        Version: "2012-10-17"
-#        Statement:
-#          - Effect: "Allow"
-#            Principal:
-#              Service:
-#                - "events.amazonaws.com"
-#                - "ec2.amazonaws.com"
-#            Action: "sts:AssumeRole"
-#      Description:
-#        Describe what you want
-#      Policies:
-#        - PolicyName: Ec2StartStopPolicy
-#          PolicyDocument:
-#            Version: '2012-10-17'
-#            Statement:
-#              - Effect: Allow
-#                Action: "lambda:InvokeFunction"
-#                Resource: "arn:aws:lambda:*:*:function:Automation*"
-#              - Effect: Allow
-#                Action:
-#                  - "ec2:StartInstances"
-#                  - "ec2:RebootInstances"
-#                  - "ec2:StopInstances"
-#                  - "ec2:TerminateInstancesInstances"
-#                Resource: "*"
-#              - Effect: Allow
-#                Action: "ssm:*"
-#                Resource: "*"
-
-
-
+  EventsRuleRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: "EventsRuleRole"
+      Path: /
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - events.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: EventsRuleRolePolicy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Action: ssm:StartAutomationExecution
+                Effect: Allow
+                Resource: "*"
+              - Effect: "Allow"
+                Action:
+                  - iam:PassRole
+                Resource: "*"
