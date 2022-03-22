@@ -7,8 +7,8 @@ Parameters:
   Env:
     Type: String
     AllowedValues:
-      - Prod
-      - Stg
+      - prod
+      - stag
       - dev
     Default: dev
   TypeApp:
@@ -101,6 +101,10 @@ Parameters:
   # BeansTalk
   SSLCertificateId:
     Type: String
+  S3BucketForFirstDeploy:
+    Type: String
+  DeployTargetForFirstDeploy:
+    Type: String
 
   # RDS
   Username:
@@ -157,32 +161,39 @@ Resources:
 #        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
 #        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
 
-#  BeansTalk:
+#  S3:
 #    Type: AWS::CloudFormation::Stack
 #    Properties:
-#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/beanstalk.yaml
-#      Parameters:
-#        SystemName: !Ref SysName
-#        Environment: !Ref Env
-#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-#        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
-#        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
-#        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
-#        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
-#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-#        SSLCertificateId: !Ref SSLCertificateId
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/s3.yaml
 
-  Batch:
+  BeansTalk:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/batch.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/beanstalk.yaml
       Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        TypeApp: !Ref TypeApp
-        SpaceChar: !Ref SpaceChar
-        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyBastionSubnetId
-        MyAppSGId: !GetAtt VPC.Outputs.MySshSGId
+        SystemName: !Ref SysName
+        Environment: !Ref Env
+        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
+        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
+        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
+        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+        SSLCertificateId: !Ref SSLCertificateId
+        S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
+        DeployTargetForFirstDeploy: !Ref DeployTargetForFirstDeploy
+
+#  Batch:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/batch.yaml
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        TypeApp: !Ref TypeApp
+#        SpaceChar: !Ref SpaceChar
+#        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyBastionSubnetId
+#        MyAppSGId: !GetAtt VPC.Outputs.MySshSGId
 
 #  RDS:
 #    Type: AWS::CloudFormation::Stack
@@ -202,18 +213,17 @@ Resources:
 #        AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
-  Lambda:
-    Type: AWS::CloudFormation::Stack
-    DeletionPolicy: Retain
-    Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/lambda.yaml
-      Parameters:
-        SystemName: !Ref SysName
-        Environment: !Ref Env
-        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnet1Id
-        InstanceArn: !GetAtt Batch.Outputs.MyAppInstance1Arn
-        InstanceId: !GetAtt Batch.Outputs.MyAppInstance1Id
+#  Lambda:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/lambda.yaml
+#      Parameters:
+#        SystemName: !Ref SysName
+#        Environment: !Ref Env
+#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnet1Id
+#        InstanceArn: !GetAtt Batch.Outputs.MyAppInstance1Arn
+#        InstanceId: !GetAtt Batch.Outputs.MyAppInstance1Id
 
 Outputs:
   # vpc

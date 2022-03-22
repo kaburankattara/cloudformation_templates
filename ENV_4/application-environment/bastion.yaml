@@ -6,8 +6,8 @@ Parameters:
   Env:
     Type: String
     AllowedValues:
-      - Prod
-      - Stg
+      - prod
+      - stag
       - dev
   TypeBastion:
     Type: String
