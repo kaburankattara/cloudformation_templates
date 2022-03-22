@@ -1,18 +1,21 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-
-#  CodeBuildProjectName:
-#    Type: String
-#    Default: 'helloWorld'
+  SysName:
+    Type: String
+  Env:
+    Type: String
+    AllowedValues:
+      - prod
+      - stag
+      - dev
+  SpaceChar:
+    Type: String
   RepositoryUrl:
     Type: String
-    Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
   PipelineEnvironmentName:
     Type: String
-    Default: 'helloWorld'
-#  S3BucketName:
-#    Type: String
-#    Default: 'my-beanstalk-tokyo'
+  FullRepositoryId:
+    Type: String
 
 Resources:
 
@@ -26,8 +29,12 @@ Resources:
     Properties:
       TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codepipeline.yaml'
       Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
         PipelineEnvironmentName: !Ref PipelineEnvironmentName
         RepositoryUrl: !Ref RepositoryUrl
+        FullRepositoryId: !Ref FullRepositoryId
         ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
 
 

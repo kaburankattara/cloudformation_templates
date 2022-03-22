@@ -120,16 +120,13 @@ Parameters:
     NoEcho: true
 
   # development-environment
-  # CodeBuild
-#  CodeBuildProjectName:
-#    Type: String
-#    Default: 'helloWorld'
+  # CodePipeline
   RepositoryUrl:
     Type: String
     Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
-#  S3BucketName:
-#    Type: String
-#    Default: 'my-beanstalk-tokyo'
+  FullRepositoryId:
+    Type: String
+    Default: 'kaburankattara/helloworldBySpringBoot'
 
 Resources:
 
@@ -173,13 +170,16 @@ Resources:
 
   DevelopmentEnvironment:
     Type: AWS::CloudFormation::Stack
+    DependsOn: ApplicationEnvironment
     Properties:
       TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
       Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
         PipelineEnvironmentName: !Sub '${SysName}${SpaceChar}${Env}'
         RepositoryUrl: !Ref RepositoryUrl
-
-#        S3BucketName: !Ref S3BucketName
+        FullRepositoryId: !Ref FullRepositoryId
 
 Outputs:
   # VPC
@@ -234,11 +234,3 @@ Outputs:
   AppSecurityGroup:
     Value: !Ref AppSecurityGroup
 
-  # development-environment
-  # CodeBuild
-#  CodeBuildProjectName:
-#    Value: !Ref CodeBuildProjectName
-#  RepositoryUrl:
-#    Value: !Ref RepositoryUrl
-#  S3BucketName:
-#    Value: !Ref S3BucketName
