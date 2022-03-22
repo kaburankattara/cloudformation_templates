@@ -7,7 +7,7 @@ Parameters:
     Default: prod
     AllowedValues:
       - prod
-      - staging
+      - stag
       - dev
   SystemName:
     Description: Name of this system.
@@ -131,7 +131,6 @@ Resources:
 
   Ec2StartRule:
     Type: AWS::Events::Rule
-    DeletionPolicy: Retain
     Properties:
       Name: !Sub ec2-start-${Environment}
       Description: ScheduledRule

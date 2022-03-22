@@ -4,19 +4,22 @@ Parameters:
   SysName:
     Type: String
     Default: 'helloWorld'
-  ArtifactBucket:
+  Env:
     Type: String
-    Default: 'my-beanstalk-tokyo'
-
-  CodeBuildProjectName:
+    AllowedValues:
+      - prod
+      - stag
+      - dev
+    Default: dev
+  SpaceChar:
     Type: String
-    Default: 'helloWorld'
+    Default: '-'
+  PipelineEnvironmentName:
+    Type: String
   RepositoryUrl:
     Type: String
-    Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
-  S3BucketName:
+  ArtifactBucketName:
     Type: String
-    Default: 'my-beanstalk-tokyo'
 
 Resources:
 
@@ -32,7 +35,7 @@ Resources:
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
-        Location: !Ref ArtifactBucket
+        Location: !Ref ArtifactBucketName
       Stages:
         - Name: Source
           Actions:
@@ -194,12 +197,12 @@ Resources:
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
-      Name: !Ref CodeBuildProjectName
+      Name: !Ref PipelineEnvironmentName
       Description: A description about my project
       ServiceRole: !GetAtt CodebuildRole.Arn
       Artifacts:
         Type: S3
-        Location: !Ref S3BucketName
+        Location: !Ref ArtifactBucketName
         Name: /
       Environment:
         Type: LINUX_CONTAINER

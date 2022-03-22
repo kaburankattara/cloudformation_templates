@@ -40,7 +40,7 @@ Parameters:
     Default: prod
     AllowedValues:
       - prod
-      - staging
+      - stag
       - dev
   SystemName:
     Description: Name of this system.

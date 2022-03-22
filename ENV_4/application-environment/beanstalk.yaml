@@ -28,6 +28,12 @@ Parameters:
   # 証明書のARN
   SSLCertificateId:
     Type: String
+  # 初回デプロイ時にデプロイするソースを格納しているバケット名
+  S3BucketForFirstDeploy:
+    Type: String
+  # 初回デプロイ時にデプロイするソースファイル名
+  DeployTargetForFirstDeploy:
+    Type: String
 
 Resources:
   sampleApplication:
@@ -43,8 +49,8 @@ Resources:
         Ref: sampleApplication
       Description: AWS ElasticBeanstalk Sample Application Version
       SourceBundle:
-        S3Bucket: !Sub "my-beanstalk-tokyo"
-        S3Key: helloworld-0.0.1-SNAPSHOT.jar
+        S3Bucket: !Ref S3BucketForFirstDeploy
+        S3Key: !Ref DeployTargetForFirstDeploy
 
   sampleConfigurationTemplate:
     Type: AWS::ElasticBeanstalk::ConfigurationTemplate
