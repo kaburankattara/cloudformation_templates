@@ -3,7 +3,6 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   SysName:
     Type: String
-    Default: 'helloWorld'
   Env:
     Type: String
     AllowedValues:
@@ -13,10 +12,11 @@ Parameters:
     Default: dev
   SpaceChar:
     Type: String
-    Default: '-'
   PipelineEnvironmentName:
     Type: String
   RepositoryUrl:
+    Type: String
+  FullRepositoryId:
     Type: String
   ArtifactBucketName:
     Type: String
@@ -32,6 +32,7 @@ Resources:
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
+      Name: !Ref PipelineEnvironmentName
       RoleArn: !GetAtt CodePipelineServiceRole.Arn
       ArtifactStore:
         Type: S3
@@ -47,7 +48,7 @@ Resources:
                 Provider: CodeStarSourceConnection
               Configuration:
                 ConnectionArn: !Ref SourceConnection
-                FullRepositoryId: "kaburankattara/helloworldBySpringBoot"
+                FullRepositoryId: !Ref FullRepositoryId
                 BranchName: master
                 OutputArtifactFormat: CODE_ZIP
               RunOrder: 1
@@ -157,8 +158,6 @@ Resources:
                 Effect: Allow
                 Action:
                   - codestar-connections:UseConnection
-
-
 
   CodebuildRole:
     Type: AWS::IAM::Role
