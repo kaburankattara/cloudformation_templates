@@ -3,56 +3,25 @@ AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   CodeBuildProjectName:
     Type: String
+  ArtifactBucketName:
+    Type: String
   RepositoryUrl:
     Type: String
-  S3BucketName:
+
+  # IAM
+  CodebuildRoleArn:
     Type: String
 
 Resources:
-
-  CodebuildRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName : aws-codebuild-role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: codebuild.amazonaws.com
-            Action: sts:AssumeRole
-
-  BuildPolicies:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: codebuild-polocy
-      Roles:
-        - !Ref CodebuildRole
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action:
-              - logs:*
-            Resource: '*'
-          - Effect: Allow
-            Action:
-              - s3:*
-            Resource: '*'
-          - Effect: Allow
-            Action:
-              - codebuild:*
-            Resource: '*'
-
   CodeBuildProject:
     Type: AWS::CodeBuild::Project
     Properties:
       Name: !Ref CodeBuildProjectName
       Description: A description about my project
-      ServiceRole: !GetAtt CodebuildRole.Arn
+      ServiceRole: !Ref CodebuildRoleArn
       Artifacts:
         Type: S3
-        Location: !Ref S3BucketName
+        Location: !Ref ArtifactBucketName
         Name: /
       Environment:
         Type: LINUX_CONTAINER
@@ -68,3 +37,7 @@ Resources:
           Type: OAUTH
         Location: !Ref RepositoryUrl
         Type: GITHUB
+
+Outputs:
+  CodeBuildProjectName:
+    Value: !Ref CodeBuildProject

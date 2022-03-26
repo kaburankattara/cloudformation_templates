@@ -18,11 +18,33 @@ Parameters:
     Type: String
 
 Resources:
+  IAM:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/iam.yaml
 
   S3:
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/s3.yaml
+
+  SourceConnection:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/sourceconnection.yaml
+      Parameters:
+        SysName: !Ref SysName
+
+  CodeBuild:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codebuild.yaml
+      Parameters:
+        CodeBuildProjectName: !Ref PipelineEnvironmentName
+        ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
+        RepositoryUrl: !Ref RepositoryUrl
+        # IAM
+        CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
 
 #  CodePipelineOfBeansTalk:
 #    Type: AWS::CloudFormation::Stack
@@ -36,6 +58,13 @@ Resources:
 #        RepositoryUrl: !Ref RepositoryUrl
 #        FullRepositoryId: !Ref FullRepositoryId
 #        ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
+#        # IAM
+#        CodePipelineServiceRoleArn: !GetAtt IAM.Outputs.CodePipelineServiceRoleArn
+#        CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
+#        # SourceConnection
+#        ConnectionArn: !GetAtt SourceConnection.Outputs.ConnectionArn
+#        # CodeBuild
+#        CodeBuildProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
 
   CodePipelineOfBatch:
     Type: AWS::CloudFormation::Stack
@@ -48,23 +77,13 @@ Resources:
         PipelineEnvironmentName: !Ref PipelineEnvironmentName
         RepositoryUrl: !Ref RepositoryUrl
         FullRepositoryId: !Ref FullRepositoryId
+        # S3
         ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
-
-
-
-#  CodeBuild:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codebuild.yaml'
-#      Parameters:
-#        CodeBuildProjectName: !Ref CodeBuildProjectName
-#        RepositoryUrl: !Ref RepositoryUrl
-#        S3BucketName: !Ref S3BucketName
-
-#Outputs:
-#  CodeBuildProjectName:
-#    Value: !Ref CodeBuildProjectName
-#  RepositoryUrl:
-#    Value: !Ref RepositoryUrl
-#  S3BucketName:
-#    Value: !Ref S3BucketName
+        # IAM
+        CodePipelineServiceRoleArn: !GetAtt IAM.Outputs.CodePipelineServiceRoleArn
+        CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
+        CodeDeployServiceRoleArn: !GetAtt IAM.Outputs.CodeDeployServiceRoleArn
+        # SourceConnection
+        ConnectionArn: !GetAtt SourceConnection.Outputs.ConnectionArn
+        # CodeBuild
+        CodeBuildProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
