@@ -13,9 +13,6 @@ Parameters:
       - stag
       - dev
     Default: dev
-  TypeBastion:
-    Type: String
-    Default: bastion
   SpaceChar:
     Type: String
     Default: '-'
@@ -39,63 +36,24 @@ Parameters:
       - ap-northeast-3b
       - ap-northeast-3c
     Default: ap-northeast-1c
-  VpcName:
-    Type: String
-    Default: vpc
   VpcCidrBlock:
     Type: String
     Default: 192.168.16.0/20
-  FrontSubnetName:
-    Type: String
-    Default: front-Subnet
   FrontSubnet1CidrBlock:
     Type: String
     Default: 192.168.20.0/24
   FrontSubnet2CidrBlock:
     Type: String
     Default: 192.168.21.0/24
-  BastionSubnetName:
-    Type: String
-    Default: bastion-subnet
   BastionSubnetCidrBlock:
     Type: String
     Default: 192.168.17.0/24
-  AppSubnetName:
-    Type: String
-    Default: app-subnet
   AppSubnet1CidrBlock:
     Type: String
     Default: 192.168.30.0/24
   AppSubnet2CidrBlock:
     Type: String
     Default: 192.168.31.0/24
-  InternetGatewayName:
-    Type: String
-    Default: internetGateway
-  FrontRTName:
-    Type: String
-    Default: front-rt
-  NatEIPName:
-    Type: String
-    Default: nat-ip
-  NatGatewayName:
-    Type: String
-    Default: natGateway
-  NatRTName:
-    Type: String
-    Default: nat-rt
-  DefaultSecurityGroup:
-    Type: String
-    Default: default-sg
-  SshSecurityGroup:
-    Type: String
-    Default: ssh-sg
-  FrontSecurityGroup:
-    Type: String
-    Default: front-sg
-  AppSecurityGroup:
-    Type: String
-    Default: app-sg
 
   # BeansTalk
   SSLCertificateId:
@@ -137,29 +95,15 @@ Resources:
       Parameters:
         SysName: !Ref SysName
         Env: !Ref Env
-        TypeBastion: !Ref TypeBastion
         SpaceChar: !Ref SpaceChar
         AvailabilityZone1: !Ref AvailabilityZone1
         AvailabilityZone2: !Ref AvailabilityZone2
-        VpcName: !Ref VpcName
         VpcCidrBlock: !Ref VpcCidrBlock
-        FrontSubnetName: !Ref FrontSubnetName
         FrontSubnet1CidrBlock: !Ref FrontSubnet1CidrBlock
         FrontSubnet2CidrBlock: !Ref FrontSubnet2CidrBlock
-        BastionSubnetName: !Ref BastionSubnetName
         BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
-        AppSubnetName: !Ref AppSubnetName
         AppSubnet1CidrBlock: !Ref AppSubnet1CidrBlock
         AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
-        InternetGatewayName: !Ref InternetGatewayName
-        FrontRTName: !Ref FrontRTName
-        NatEIPName: !Ref NatEIPName
-        NatGatewayName: !Ref NatGatewayName
-        NatRTName: !Ref NatRTName
-        DefaultSecurityGroup: !Ref DefaultSecurityGroup
-        SshSecurityGroup: !Ref SshSecurityGroup
-        FrontSecurityGroup: !Ref FrontSecurityGroup
-        AppSecurityGroup: !Ref AppSecurityGroup
         # BeansTalk
         SSLCertificateId: !Ref SSLCertificateId
         S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
@@ -181,56 +125,5 @@ Resources:
         RepositoryUrl: !Ref RepositoryUrl
         FullRepositoryId: !Ref FullRepositoryId
 
-Outputs:
-  # VPC
-  SysName:
-    Value: !Ref SysName
-  Env:
-    Value: !Ref Env
-  TypeBastion:
-    Value: !Ref TypeBastion
-  SpaceChar:
-    Value: !Ref SpaceChar
-  AvailabilityZone1:
-    Value: !Ref AvailabilityZone1
-  AvailabilityZone2:
-    Value: !Ref AvailabilityZone2
-  VpcName:
-    Value: !Ref VpcName
-  VpcCidrBlock:
-    Value: !Ref VpcCidrBlock
-  FrontSubnetName:
-    Value: !Ref FrontSubnetName
-  FrontSubnet1CidrBlock:
-    Value: !Ref FrontSubnet1CidrBlock
-  FrontSubnet2CidrBlock:
-    Value: !Ref FrontSubnet2CidrBlock
-  BastionSubnetName:
-    Value: !Ref BastionSubnetName
-  BastionSubnetCidrBlock:
-    Value: !Ref BastionSubnetCidrBlock
-  AppSubnetName:
-    Value: !Ref AppSubnetName
-  AppSubnet1CidrBlock:
-    Value: !Ref AppSubnet1CidrBlock
-  AppSubnet2CidrBlock:
-    Value: !Ref AppSubnet2CidrBlock
-  InternetGatewayName:
-    Value: !Ref InternetGatewayName
-  FrontRTName:
-    Value: !Ref FrontRTName
-  NatEIPName:
-    Value: !Ref NatEIPName
-  NatGatewayName:
-    Value: !Ref NatGatewayName
-  NatRTName:
-    Value: !Ref NatRTName
-  DefaultSecurityGroup:
-    Value: !Ref DefaultSecurityGroup
-  SshSecurityGroup:
-    Value: !Ref SshSecurityGroup
-  FrontSecurityGroup:
-    Value: !Ref FrontSecurityGroup
-  AppSecurityGroup:
-    Value: !Ref AppSecurityGroup
+
 
