@@ -91,9 +91,8 @@ Parameters:
     Type: String
     Default: app-sg
 Resources:
-
   MyVPC:
-    Type: 'AWS::EC2::VPC'
+    Type: AWS::EC2::VPC
     Properties:
       CidrBlock: !Ref VpcCidrBlock
       Tags:
@@ -103,7 +102,7 @@ Resources:
             - VpcName: !Ref VpcName
 
   MyFrontSubnet1:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
       CidrBlock: !Ref FrontSubnet1CidrBlock
@@ -115,7 +114,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyFrontSubnet2:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone2
       CidrBlock: !Ref FrontSubnet2CidrBlock
@@ -127,7 +126,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyBastionSubnet:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
       CidrBlock: !Ref BastionSubnetCidrBlock
@@ -139,7 +138,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyAppSubnet1:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone1
       CidrBlock: !Ref AppSubnet1CidrBlock
@@ -151,7 +150,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyAppSubnet2:
-    Type: 'AWS::EC2::Subnet'
+    Type: AWS::EC2::Subnet
     Properties:
       AvailabilityZone: !Ref AvailabilityZone2
       CidrBlock: !Ref AppSubnet2CidrBlock
@@ -163,7 +162,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyInternetGateway:
-    Type: 'AWS::EC2::InternetGateway'
+    Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
@@ -172,7 +171,7 @@ Resources:
             - AppSubnetName: !Ref InternetGatewayName
 
   MyFrontRT:
-    Type: 'AWS::EC2::RouteTable'
+    Type: AWS::EC2::RouteTable
     Properties:
       Tags:
         - Key: Name
@@ -182,7 +181,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyGatewayToInternet:
-    Type: 'AWS::EC2::Route'
+    Type: AWS::EC2::Route
     DependsOn: MyVPCGatewayAttachment
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
@@ -190,14 +189,14 @@ Resources:
       RouteTableId: !Ref MyFrontRT
 
   MyVPCGatewayAttachment:
-    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Type: AWS::EC2::VPCGatewayAttachment
     DependsOn: MyInternetGateway
     Properties:
       VpcId: !Ref MyVPC
       InternetGatewayId: !Ref MyInternetGateway
 
   MyNatEIP:
-    Type: 'AWS::EC2::EIP'
+    Type: AWS::EC2::EIP
     Properties:
       Tags:
         - Key: Name
@@ -206,7 +205,7 @@ Resources:
             - NatEIPName: !Ref NatEIPName
 
   MyNatGateway:
-    Type: 'AWS::EC2::NatGateway'
+    Type: AWS::EC2::NatGateway
     DependsOn: MyNatEIP
     Properties:
       AllocationId: !GetAtt MyNatEIP.AllocationId
@@ -219,7 +218,7 @@ Resources:
             - NatGatewayName: !Ref NatGatewayName
 
   MyNatRT:
-    Type: 'AWS::EC2::RouteTable'
+    Type: AWS::EC2::RouteTable
     Properties:
       Tags:
         - Key: Name
@@ -229,14 +228,14 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyNatGatewayToInternet:
-    Type: 'AWS::EC2::Route'
+    Type: AWS::EC2::Route
     Properties:
       DestinationCidrBlock: 0.0.0.0/0
       NatGatewayId: !Ref MyNatGateway
       RouteTableId: !Ref MyNatRT
 
   MyDefaultSG:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub
         - '${SysName}${SpaceChar}${Env}${SpaceChar}${DefaultSecurityGroup}'
@@ -263,7 +262,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MySshSG:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub
         - '${SysName}${SpaceChar}${Env}${SpaceChar}${SshSecurityGroup}'
@@ -291,7 +290,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyFrontSG:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub
         - '${SysName}${SpaceChar}${Env}${SpaceChar}${FrontSecurityGroup}'
@@ -324,7 +323,7 @@ Resources:
       VpcId: !Ref MyVPC
 
   MyAppSG:
-    Type: 'AWS::EC2::SecurityGroup'
+    Type: AWS::EC2::SecurityGroup
     Properties:
       GroupDescription: !Sub
         - '${SysName}${SpaceChar}${Env}${SpaceChar}${AppSecurityGroup}'
@@ -372,31 +371,31 @@ Resources:
       VpcId: !Ref MyVPC
 
   FrontSubnetRouteTableAssociation1:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref MyFrontRT
       SubnetId: !Ref MyFrontSubnet1
 
   FrontSubnetRouteTableAssociation2:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref MyFrontRT
       SubnetId: !Ref MyFrontSubnet2
 
   BastionSubnetRouteTableAssociation:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref MyFrontRT
       SubnetId: !Ref MyBastionSubnet
 
   AppSubnetRouteTableAssociation1:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref MyNatRT
       SubnetId: !Ref MyAppSubnet1
 
   AppSubnetRouteTableAssociation2:
-    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref MyNatRT
       SubnetId: !Ref MyAppSubnet2
