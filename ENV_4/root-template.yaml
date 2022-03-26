@@ -1,9 +1,9 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 Parameters:
   # common
   SysName:
     Type: String
-    Default: 'helloWorld'
+    Default: helloWorld
   Env:
     Type: String
     AllowedValues:
@@ -14,6 +14,12 @@ Parameters:
   SpaceChar:
     Type: String
     Default: '-'
+  KeyPairName:
+    Type: String
+    AllowedValues:
+      - cassandra2
+      - osaka-region.pem
+    Default: cassandra2
 
   # application-environment
   # VPC
@@ -103,6 +109,7 @@ Resources:
         SysName: !Ref SysName
         Env: !Ref Env
         SpaceChar: !Ref SpaceChar
+        KeyPairName: !Ref KeyPairName
         AvailabilityZone1: !Ref AvailabilityZone1
         AvailabilityZone2: !Ref AvailabilityZone2
         VpcCidrBlock: !Ref VpcCidrBlock

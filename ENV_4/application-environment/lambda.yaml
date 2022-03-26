@@ -118,8 +118,8 @@ Resources:
       ManagedPolicyArns:
         - arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess
         - arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole
-      Path: "/"
-      RoleName: "LambdaRole"
+      Path: /
+      RoleName: LambdaRole
 
   LambdaPermission:
     Type: AWS::Lambda::Permission
@@ -139,7 +139,7 @@ Resources:
       State: ENABLED
       RoleArn: !GetAtt EventsRuleRole.Arn
       Targets:
-        - Arn: arn:aws:ssm:ap-northeast-1::automation-definition/AWS-StartEC2Instance:$DEFAULT
+        - Arn: !Sub arn:aws:ssm:${AWS::Region}::automation-definition/AWS-StartEC2Instance:$DEFAULT
           Id: !Sub ec2-start-${Environment}
           RoleArn: !Sub ${EventsRuleRole.Arn}
           Input: !Sub "{\"InstanceId\":[\"${InstanceId}\"],\"AutomationAssumeRole\":[\"${AmazonSSMAutomationRole.Arn}\"]}"
@@ -147,10 +147,10 @@ Resources:
   AmazonSSMAutomationRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "AmazonSSMAutomationRole"
+      RoleName: AmazonSSMAutomationRole
       Path: /
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
@@ -164,10 +164,10 @@ Resources:
   EventsRuleRole:
     Type: AWS::IAM::Role
     Properties:
-      RoleName: "EventsRuleRole"
+      RoleName: EventsRuleRole
       Path: /
       AssumeRolePolicyDocument:
-        Version: "2012-10-17"
+        Version: 2012-10-17
         Statement:
           - Effect: Allow
             Principal:
@@ -178,12 +178,12 @@ Resources:
       Policies:
         - PolicyName: EventsRuleRolePolicy
           PolicyDocument:
-            Version: '2012-10-17'
+            Version: 2012-10-17
             Statement:
               - Action: ssm:StartAutomationExecution
                 Effect: Allow
                 Resource: "*"
-              - Effect: "Allow"
+              - Effect: Allow
                 Action:
                   - iam:PassRole
                 Resource: "*"
