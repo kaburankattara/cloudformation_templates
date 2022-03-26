@@ -10,12 +10,21 @@ Parameters:
       - dev
   SpaceChar:
     Type: String
+
+  # CodeBuild
   RepositoryUrl:
     Type: String
-  PipelineEnvironmentName:
-    Type: String
+
+  # CodePipeline
   FullRepositoryId:
     Type: String
+  BuildedSource:
+    Type: String
+  DeployTargetEC2Name:
+    Type: String
+  PipelineName:
+    Type: String
+    Default: pipeline
 
 Resources:
   IAM:
@@ -40,31 +49,30 @@ Resources:
     Properties:
       TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codebuild.yaml
       Parameters:
-        CodeBuildProjectName: !Ref PipelineEnvironmentName
+        CodeBuildProjectName: !Sub '${SysName}${SpaceChar}${Env}'
         ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
         RepositoryUrl: !Ref RepositoryUrl
         # IAM
         CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
 
-#  CodePipelineOfBeansTalk:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codepipeline.yaml'
-#      Parameters:
-#        SysName: !Ref SysName
-#        Env: !Ref Env
-#        SpaceChar: !Ref SpaceChar
-#        PipelineEnvironmentName: !Ref PipelineEnvironmentName
-#        RepositoryUrl: !Ref RepositoryUrl
-#        FullRepositoryId: !Ref FullRepositoryId
-#        ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
-#        # IAM
-#        CodePipelineServiceRoleArn: !GetAtt IAM.Outputs.CodePipelineServiceRoleArn
-#        CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
-#        # SourceConnection
-#        ConnectionArn: !GetAtt SourceConnection.Outputs.ConnectionArn
-#        # CodeBuild
-#        CodeBuildProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
+  CodePipelineOfBeansTalk:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/codepipeline.yaml'
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
+        PipelineEnvironmentName: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}beanstalk${SpaceChar}${PipelineName}'
+        FullRepositoryId: !Ref FullRepositoryId
+        ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
+        # IAM
+        CodePipelineServiceRoleArn: !GetAtt IAM.Outputs.CodePipelineServiceRoleArn
+        CodebuildRoleArn: !GetAtt IAM.Outputs.CodebuildRoleArn
+        # SourceConnection
+        ConnectionArn: !GetAtt SourceConnection.Outputs.ConnectionArn
+        # CodeBuild
+        CodeBuildProjectName: !GetAtt CodeBuild.Outputs.CodeBuildProjectName
 
   CodePipelineOfBatch:
     Type: AWS::CloudFormation::Stack
@@ -74,9 +82,10 @@ Resources:
         SysName: !Ref SysName
         Env: !Ref Env
         SpaceChar: !Ref SpaceChar
-        PipelineEnvironmentName: !Ref PipelineEnvironmentName
-        RepositoryUrl: !Ref RepositoryUrl
+        PipelineEnvironmentName: !Sub '${SysName}${SpaceChar}${Env}${SpaceChar}batch${SpaceChar}${PipelineName}'
         FullRepositoryId: !Ref FullRepositoryId
+        BuildedSource: !Ref BuildedSource
+        DeployTargetEC2Name: !Ref DeployTargetEC2Name
         # S3
         ArtifactBucketName: !GetAtt S3.Outputs.S3BucketName
         # IAM

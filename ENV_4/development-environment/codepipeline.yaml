@@ -14,8 +14,6 @@ Parameters:
     Type: String
   PipelineEnvironmentName:
     Type: String
-  RepositoryUrl:
-    Type: String
   FullRepositoryId:
     Type: String
   ArtifactBucketName:
