@@ -1,7 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-
-  # VPC
   SysName:
     Type: String
   Env:
@@ -11,12 +9,14 @@ Parameters:
       - stag
       - dev
     Default: dev
-  TypeApp:
-    Type: String
-    Default: app
   SpaceChar:
     Type: String
     Default: '-'
+
+  # VPC
+  TypeApp:
+    Type: String
+    Default: app
   AvailabilityZone1:
     Type: String
     AllowedValues:
