@@ -149,17 +149,17 @@ Resources:
         FrontSecurityGroup: !Ref FrontSecurityGroup
         AppSecurityGroup: !Ref AppSecurityGroup
 
-  Bastion:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/bastion.yaml
-      Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        TypeBastion: !Ref TypeBastion
-        SpaceChar: !Ref SpaceChar
-        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
-        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
+#  Bastion:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/bastion.yaml
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        TypeBastion: !Ref TypeBastion
+#        SpaceChar: !Ref SpaceChar
+#        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
+#        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
 
 #  S3:
 #    Type: AWS::CloudFormation::Stack

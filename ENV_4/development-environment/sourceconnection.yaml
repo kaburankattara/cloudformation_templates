@@ -1,0 +1,16 @@
+AWSTemplateFormatVersion: 2010-09-09
+
+Parameters:
+  SysName:
+    Type: String
+
+Resources:
+  SourceConnection:
+    Type: AWS::CodeStarConnections::Connection
+    Properties:
+      ConnectionName: !Sub ${SysName}-Con
+      ProviderType: GitHub
+
+Outputs:
+  ConnectionArn:
+    Value: !Ref SourceConnection

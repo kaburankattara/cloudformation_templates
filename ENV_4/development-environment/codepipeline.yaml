@@ -21,19 +21,26 @@ Parameters:
   ArtifactBucketName:
     Type: String
 
+  # IAM
+  CodePipelineServiceRoleArn:
+    Type: String
+  CodebuildRoleArn:
+    Type: String
+
+  # SourceConnection
+  ConnectionArn:
+    Type: String
+
+  # CodeBuild
+  CodeBuildProjectName:
+    Type: String
+
 Resources:
-
-  SourceConnection:
-    Type: AWS::CodeStarConnections::Connection
-    Properties:
-      ConnectionName: !Sub ${SysName}-Con
-      ProviderType: GitHub
-
   Pipeline:
     Type: AWS::CodePipeline::Pipeline
     Properties:
       Name: !Ref PipelineEnvironmentName
-      RoleArn: !GetAtt CodePipelineServiceRole.Arn
+      RoleArn: !Ref CodePipelineServiceRoleArn
       ArtifactStore:
         Type: S3
         Location: !Ref ArtifactBucketName
@@ -47,7 +54,7 @@ Resources:
                 Version: 1
                 Provider: CodeStarSourceConnection
               Configuration:
-                ConnectionArn: !Ref SourceConnection
+                ConnectionArn: !Ref ConnectionArn
                 FullRepositoryId: !Ref FullRepositoryId
                 BranchName: master
                 OutputArtifactFormat: CODE_ZIP
@@ -63,7 +70,7 @@ Resources:
                 Version: 1
                 Provider: CodeBuild
               Configuration:
-                ProjectName: !Ref CodeBuildProject
+                ProjectName: !Ref CodeBuildProjectName
               RunOrder: 1
               InputArtifacts:
                 - Name: App
@@ -83,137 +90,3 @@ Resources:
               RunOrder: 1
               InputArtifacts:
                 - Name: MyApp
-
-#        - Name: Deploy
-#          Actions:
-#            - Name: Deploy
-#              ActionTypeId:
-#                Category: Deploy
-#                Owner: AWS
-#                Version: 1
-#                Provider: CodeDeploy
-#              Configuration:
-#                ApplicationName: !Ref CodeDeployAplication
-#                DeploymentGroupName: !Ref CodeDeployGroup
-#              RunOrder: 1
-#              InputArtifacts:
-#                - Name: MyApp
-
-  CodePipelineServiceRole:
-    Type: AWS::IAM::Role
-    Properties:
-      Path: /
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: codepipeline.amazonaws.com
-            Action: sts:AssumeRole
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess-AWSElasticBeanstalk
-      Policies:
-        - PolicyName: root
-          PolicyDocument:
-            Version: 2012-10-17
-            Statement:
-              - Resource: "*"
-#                  - !Sub arn:aws:s3:::${ArtifactBucket}/*
-                Effect: Allow
-                Action:
-                  - s3:PutObject
-                  - s3:PutObjectAcl
-                  - s3:GetObject
-                  - s3:GetObjectVersion
-                  - s3:GetBucketVersioning
-              - Resource: "*"
-                Effect: Allow
-                Action:
-                  - codebuild:StartBuild
-                  - codebuild:StopBuild
-                  - codebuild:BatchGet*
-                  - codebuild:Get*
-                  - codebuild:List*
-                  - codecommit:GetBranch
-                  - codecommit:GetCommit
-                  - codecommit:GetRepository
-                  - codecommit:ListBranches
-                  - codecommit:GetUploadArchiveStatus
-                  - codecommit:UploadArchive
-                  - codecommit:CancelUploadArchive
-                  - codedeploy:CreateDeployment
-                  - codedeploy:GetApplicationRevision
-                  - codedeploy:GetDeployment
-                  - codedeploy:GetDeploymentConfig
-                  - codedeploy:RegisterApplicationRevision
-                  - s3:GetBucketLocation
-                  - s3:ListAllMyBuckets
-                  - iam:PassRole
-                  - elasticbeanstalk:*
-              - Resource: "arn:aws:ssm:*:*:parameter/CodeBuild/*"
-                Effect: Allow
-                Action:
-                  - ssm:PutParameter
-              - Resource: "*"
-                Effect: Allow
-                Action:
-                  - codestar-connections:UseConnection
-
-  CodebuildRole:
-    Type: AWS::IAM::Role
-    Properties:
-      RoleName : aws-codebuild-role
-      AssumeRolePolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service: codebuild.amazonaws.com
-            Action: sts:AssumeRole
-
-  BuildPolicies:
-    Type: AWS::IAM::Policy
-    Properties:
-      PolicyName: codebuild-polocy
-      Roles:
-        - !Ref CodebuildRole
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Effect: Allow
-            Action:
-              - logs:*
-            Resource: '*'
-          - Effect: Allow
-            Action:
-              - s3:*
-            Resource: '*'
-          - Effect: Allow
-            Action:
-              - codebuild:*
-            Resource: '*'
-
-  CodeBuildProject:
-    Type: AWS::CodeBuild::Project
-    Properties:
-      Name: !Ref PipelineEnvironmentName
-      Description: A description about my project
-      ServiceRole: !GetAtt CodebuildRole.Arn
-      Artifacts:
-        Type: S3
-        Location: !Ref ArtifactBucketName
-        Name: /
-      Environment:
-        Type: LINUX_CONTAINER
-        ComputeType: BUILD_GENERAL1_SMALL
-        Image: aws/codebuild/amazonlinux2-x86_64-standard:3.0
-      # 環境変数
-      #        EnvironmentVariables:
-      #          - Name: varName
-      #            Type: varType
-      #            Value: varValue
-      Source:
-        Auth:
-          Type: OAUTH
-        Location: !Ref RepositoryUrl
-        Type: GITHUB
