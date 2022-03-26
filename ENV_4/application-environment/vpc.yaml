@@ -63,21 +63,21 @@ Parameters:
   AppSubnet2CidrBlock:
     Type: String
     Default: 192.168.31.0/24
-  InternetGatewayName:
-    Type: String
-    Default: internetGateway
   FrontRTName:
     Type: String
     Default: front-rt
-  NatEIPName:
-    Type: String
-    Default: nat-ip
-  NatGatewayName:
-    Type: String
-    Default: natGateway
   NatRTName:
     Type: String
     Default: nat-rt
+  NatEIPName:
+    Type: String
+    Default: nat-ip
+  InternetGatewayName:
+    Type: String
+    Default: internetGateway
+  NatGatewayName:
+    Type: String
+    Default: natGateway
   DefaultSecurityGroup:
     Type: String
     Default: default-sg
