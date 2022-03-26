@@ -1,8 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Parameters:
-
-  # application-environment
-  # VPC
+  # common
   SysName:
     Type: String
     Default: 'helloWorld'
@@ -16,6 +14,9 @@ Parameters:
   SpaceChar:
     Type: String
     Default: '-'
+
+  # application-environment
+  # VPC
   AvailabilityZone1:
     Type: String
     AllowedValues:
@@ -78,16 +79,22 @@ Parameters:
     NoEcho: true
 
   # development-environment
-  # CodePipeline
+  # CodePipelineOfBeansTalk
   RepositoryUrl:
     Type: String
     Default: 'https://github.com/kaburankattara/helloworldBySpringBoot.git'
   FullRepositoryId:
     Type: String
     Default: 'kaburankattara/helloworldBySpringBoot'
+  # CodePipelineOfBatch
+  BuildedSource:
+    Type: String
+    Default: helloworld-0.0.1-SNAPSHOT.jar
+  DeployTargetEC2Name:
+    Type: String
+    Default: helloWorld-dev-app
 
 Resources:
-
   ApplicationEnvironment:
     Type: AWS::CloudFormation::Stack
     Properties:
@@ -121,9 +128,9 @@ Resources:
         SysName: !Ref SysName
         Env: !Ref Env
         SpaceChar: !Ref SpaceChar
-        PipelineEnvironmentName: !Sub '${SysName}${SpaceChar}${Env}'
         RepositoryUrl: !Ref RepositoryUrl
         FullRepositoryId: !Ref FullRepositoryId
-
+        BuildedSource: !Ref BuildedSource
+        DeployTargetEC2Name: !Ref DeployTargetEC2Name
 
 

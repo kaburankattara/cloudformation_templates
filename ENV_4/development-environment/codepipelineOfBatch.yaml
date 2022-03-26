@@ -14,18 +14,14 @@ Parameters:
     Type: String
   PipelineEnvironmentName:
     Type: String
-  RepositoryUrl:
-    Type: String
   FullRepositoryId:
     Type: String
   ArtifactBucketName:
     Type: String
   BuildedSource:
     Type: String
-    Default: helloworld-0.0.1-SNAPSHOT.jar
-  DeployDestinationEC2Name:
+  DeployTargetEC2Name:
     Type: String
-    Default: helloWorld-dev-app
 
   # IAM
   CodePipelineServiceRoleArn:
@@ -125,6 +121,6 @@ Resources:
       Ec2TagFilters:
         - Key: Name
           Type: KEY_AND_VALUE
-          Value: !Ref DeployDestinationEC2Name
+          Value: !Ref DeployTargetEC2Name
       ServiceRoleArn: !Ref CodeDeployServiceRoleArn
 
