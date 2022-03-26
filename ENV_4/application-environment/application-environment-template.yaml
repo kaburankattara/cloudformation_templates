@@ -12,6 +12,8 @@ Parameters:
   SpaceChar:
     Type: String
     Default: '-'
+  KeyPairName:
+    Type: String
 
   # VPC
   TypeApp:
@@ -101,6 +103,7 @@ Resources:
         SysName: !Ref SysName
         Env: !Ref Env
         SpaceChar: !Ref SpaceChar
+        KeyPairName: !Ref KeyPairName
         MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
         MySshSGId: !GetAtt VPC.Outputs.MySshSGId
 
@@ -116,6 +119,7 @@ Resources:
       Parameters:
         SystemName: !Ref SysName
         Environment: !Ref Env
+        KeyPairName: !Ref KeyPairName
         MyVpcId: !GetAtt VPC.Outputs.MyVpcId
         MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
         MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
@@ -135,6 +139,7 @@ Resources:
         Env: !Ref Env
         TypeApp: !Ref TypeApp
         SpaceChar: !Ref SpaceChar
+        KeyPairName: !Ref KeyPairName
         MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
         MyAppSGId: !GetAtt VPC.Outputs.MySshSGId
 
@@ -156,16 +161,16 @@ Resources:
 #        AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
 #        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
 
-#  Lambda:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/lambda.yaml
-#      Parameters:
-#        SystemName: !Ref SysName
-#        Environment: !Ref Env
-#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-#        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnet1Id
-#        InstanceArn: !GetAtt Batch.Outputs.MyAppInstance1Arn
-#        InstanceId: !GetAtt Batch.Outputs.MyAppInstance1Id
+  Lambda:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/lambda.yaml
+      Parameters:
+        SystemName: !Ref SysName
+        Environment: !Ref Env
+        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
+        MyAppSubnetId: !GetAtt VPC.Outputs.MyAppSubnet1Id
+        InstanceArn: !GetAtt Batch.Outputs.MyAppInstance1Arn
+        InstanceId: !GetAtt Batch.Outputs.MyAppInstance1Id
 
 

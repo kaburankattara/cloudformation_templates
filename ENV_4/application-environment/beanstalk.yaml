@@ -1,18 +1,29 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: 2010-09-09
 
 Parameters:
+  SystemName:
+    Description: Name of this system.
+    Type: String
   Environment:
     Description: Type of this environment.
     Type: String
-    Default: prod
     AllowedValues:
       - prod
       - staging
       - dev
-  SystemName:
-    Description: Name of this system.
+  KeyPairName:
     Type: String
-    Default: my-beanstalk
+  # 証明書のARN
+  SSLCertificateId:
+    Type: String
+  # 初回デプロイ時にデプロイするソースを格納しているバケット名
+  S3BucketForFirstDeploy:
+    Type: String
+  # 初回デプロイ時にデプロイするソースファイル名
+  DeployTargetForFirstDeploy:
+    Type: String
+
+  # VPC
   MyVpcId:
     Type: String
   MyAppSubnet1Id:
@@ -24,15 +35,6 @@ Parameters:
   MyFrontSubnet2Id:
     Type: String
   MyAppSGId:
-    Type: String
-  # 証明書のARN
-  SSLCertificateId:
-    Type: String
-  # 初回デプロイ時にデプロイするソースを格納しているバケット名
-  S3BucketForFirstDeploy:
-    Type: String
-  # 初回デプロイ時にデプロイするソースファイル名
-  DeployTargetForFirstDeploy:
     Type: String
 
 Resources:
@@ -152,7 +154,7 @@ Resources:
           Value: 1
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: EC2KeyName
-          Value: cassandra2
+          Value: !Ref KeyPairName
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: IamInstanceProfile
           Value: !Ref MyInstanceProfile
