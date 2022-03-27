@@ -83,11 +83,15 @@ Parameters:
 
   # BeansTalk
   SSLCertificateId:
+    Description: param for Tokyo or Osaka
     Type: String
-    Default: arn:aws:acm:ap-northeast-1:498588106976:certificate/4b64b506-0eb9-415d-b210-efc08389b9a5
+    Default: arn:aws:acm:ap-northeast-3:498588106976:certificate/27cf533d-6ca5-43b9-9ac9-35f1a5d8178f
+#    Default: arn:aws:acm:ap-northeast-1:498588106976:certificate/4b64b506-0eb9-415d-b210-efc08389b9a5
   S3BucketForFirstDeploy:
+    Description: param for Tokyo or Osaka
     Type: String
-    Default: cf-templates-lpwe8q0rzy1m-ap-northeast-1
+    Default: cf-templates-lpwe8q0rzy1m-ap-northeast-3
+#    Default: cf-templates-lpwe8q0rzy1m-ap-northeast-1
   DeployTargetForFirstDeploy:
     Type: String
     Default: helloworld-0.0.1-SNAPSHOT.jar
@@ -151,18 +155,18 @@ Resources:
         Username: !Ref Username
         Password: !Ref Password
 
-#  DevelopmentEnvironment:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn: ApplicationEnvironment
-#    Properties:
-#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
-#      Parameters:
-#        SysName: !Ref SysName
-#        Env: !Ref Env
-#        SpaceChar: !Ref SpaceChar
-#        RepositoryUrl: !Ref RepositoryUrl
-#        FullRepositoryId: !Ref FullRepositoryId
-#        BuildedSource: !Ref BuildedSource
-#        DeployTargetEC2Name: !Ref DeployTargetEC2Name
+  DevelopmentEnvironment:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: ApplicationEnvironment
+    Properties:
+      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
+        RepositoryUrl: !Ref RepositoryUrl
+        FullRepositoryId: !Ref FullRepositoryId
+        BuildedSource: !Ref BuildedSource
+        DeployTargetEC2Name: !Ref DeployTargetEC2Name
 
 
