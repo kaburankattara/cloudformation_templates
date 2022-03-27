@@ -222,7 +222,6 @@ Resources:
           OptionName: StreamLogs
           Value: true
 
-
   MyServiceRole:
     Type: AWS::IAM::Role
     Properties:
@@ -267,7 +266,6 @@ Resources:
       Roles:
         - !Ref MyInstanceRole
 
-
   MyELBSG:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -289,7 +287,6 @@ Resources:
         - Key: Name
           Value: !Sub '${SystemName}-${Environment}-elb-sg'
       VpcId: !Ref MyVpcId
-
 
   MyBeansTalkAppSG:
     Type: AWS::EC2::SecurityGroup

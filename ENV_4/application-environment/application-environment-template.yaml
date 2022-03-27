@@ -126,38 +126,38 @@ Resources:
 #    Properties:
 #      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/s3.yaml
 
-#  BeansTalk:
-#    Type: AWS::CloudFormation::Stack
-#    Properties:
-#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/beanstalk.yaml
-#      Parameters:
-#        SystemName: !Ref SysName
-#        Environment: !Ref Env
-#        KeyPairName: !Ref KeyPairName
-#        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
-#        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
-#        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
-#        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
-#        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
-#        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-#        SSLCertificateId: !Ref SSLCertificateId
-#        S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
-#        DeployTargetForFirstDeploy: !Ref DeployTargetForFirstDeploy
-
-  Batch:
+  BeansTalk:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/batch.yaml
+      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/beanstalk.yaml
       Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        TypeApp: !Ref TypeApp
-        SpaceChar: !Ref SpaceChar
+        SystemName: !Ref SysName
+        Environment: !Ref Env
         KeyPairName: !Ref KeyPairName
+        MyVpcId: !GetAtt VPC.Outputs.MyVpcId
         MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
-        MyAppSGId: !GetAtt VPC.Outputs.MySshSGId
-        Ec2ImageId: !Ref BatchImageId
-        Ec2InstanceType: !Ref BatchEc2InstanceType
+        MyAppSubnet2Id: !GetAtt VPC.Outputs.MyAppSubnet2Id
+        MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
+        MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
+        MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
+        SSLCertificateId: !Ref SSLCertificateId
+        S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
+        DeployTargetForFirstDeploy: !Ref DeployTargetForFirstDeploy
+
+#  Batch:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/batch.yaml
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        TypeApp: !Ref TypeApp
+#        SpaceChar: !Ref SpaceChar
+#        KeyPairName: !Ref KeyPairName
+#        MyAppSubnet1Id: !GetAtt VPC.Outputs.MyAppSubnet1Id
+#        MyAppSGId: !GetAtt VPC.Outputs.MySshSGId
+#        Ec2ImageId: !Ref BatchImageId
+#        Ec2InstanceType: !Ref BatchEc2InstanceType
 
 #  RDS:
 #    Type: AWS::CloudFormation::Stack
