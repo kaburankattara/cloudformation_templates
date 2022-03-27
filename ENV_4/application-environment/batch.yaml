@@ -17,6 +17,10 @@ Parameters:
   TypeApp:
     Type: String
     Default: app
+  Ec2ImageId:
+    Type: String
+  Ec2InstanceType:
+    Type: String
 
   # VPC
   MyAppSubnet1Id:
@@ -90,8 +94,8 @@ Resources:
   MyAppInstance1:
     Type: 'AWS::EC2::Instance'
     Properties:
-      ImageId: ami-07b4f72c4c356c19d
-      InstanceType: t3.nano
+      ImageId: !Ref Ec2ImageId
+      InstanceType: !Ref Ec2InstanceType
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
         - SubnetId: !Ref MyAppSubnet1Id

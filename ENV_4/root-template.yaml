@@ -15,15 +15,17 @@ Parameters:
     Type: String
     Default: '-'
   KeyPairName:
+    Description: param for Tokyo or Osaka
     Type: String
     AllowedValues:
       - cassandra2
-      - osaka-region.pem
-    Default: cassandra2
+      - osaka-region
+    Default: osaka-region
 
   # application-environment
   # VPC
   AvailabilityZone1:
+    Description: param for Tokyo or Osaka
     Type: String
     AllowedValues:
       - ap-northeast-1a
@@ -32,8 +34,9 @@ Parameters:
       - ap-northeast-3a
       - ap-northeast-3b
       - ap-northeast-3c
-    Default: ap-northeast-1a
+    Default: ap-northeast-3a
   AvailabilityZone2:
+    Description: param for Tokyo or Osaka
     Type: String
     AllowedValues:
       - ap-northeast-1a
@@ -42,7 +45,7 @@ Parameters:
       - ap-northeast-3a
       - ap-northeast-3b
       - ap-northeast-3c
-    Default: ap-northeast-1c
+    Default: ap-northeast-3c
   VpcCidrBlock:
     Type: String
     Default: 192.168.16.0/20
@@ -61,6 +64,22 @@ Parameters:
   AppSubnet2CidrBlock:
     Type: String
     Default: 192.168.31.0/24
+
+  # Bastion
+  BastionEc2ImageId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  BastionEc2InstanceType:
+    Type: String
+    Default: t2.micro
+
+  # Batch
+  BatchImageId:
+    Type: AWS::SSM::Parameter::Value<String>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+  BatchEc2InstanceType:
+    Type: String
+    Default: t3.nano
 
   # BeansTalk
   SSLCertificateId:
@@ -118,6 +137,12 @@ Resources:
         BastionSubnetCidrBlock: !Ref BastionSubnetCidrBlock
         AppSubnet1CidrBlock: !Ref AppSubnet1CidrBlock
         AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
+        # Bastion
+        BastionEc2ImageId: !Ref BastionEc2ImageId
+        BastionEc2InstanceType: !Ref BastionEc2InstanceType
+        # Batch
+        BatchImageId: !Ref BatchImageId
+        BatchEc2InstanceType: !Ref BatchEc2InstanceType
         # BeansTalk
         SSLCertificateId: !Ref SSLCertificateId
         S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
@@ -126,18 +151,18 @@ Resources:
         Username: !Ref Username
         Password: !Ref Password
 
-  DevelopmentEnvironment:
-    Type: AWS::CloudFormation::Stack
-    DependsOn: ApplicationEnvironment
-    Properties:
-      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
-      Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        SpaceChar: !Ref SpaceChar
-        RepositoryUrl: !Ref RepositoryUrl
-        FullRepositoryId: !Ref FullRepositoryId
-        BuildedSource: !Ref BuildedSource
-        DeployTargetEC2Name: !Ref DeployTargetEC2Name
+#  DevelopmentEnvironment:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn: ApplicationEnvironment
+#    Properties:
+#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        SpaceChar: !Ref SpaceChar
+#        RepositoryUrl: !Ref RepositoryUrl
+#        FullRepositoryId: !Ref FullRepositoryId
+#        BuildedSource: !Ref BuildedSource
+#        DeployTargetEC2Name: !Ref DeployTargetEC2Name
 
 

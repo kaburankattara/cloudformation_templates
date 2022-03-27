@@ -21,13 +21,17 @@ Parameters:
     Type: String
   MySshSGId:
     Type: String
+  Ec2ImageId:
+    Type: String
+  Ec2InstanceType:
+    Type: String
 
 Resources:
   MyBastionInstance:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-07b4f72c4c356c19d
-      InstanceType: t2.micro
+      ImageId: !Ref Ec2ImageId
+      InstanceType: !Ref Ec2InstanceType
       KeyName: !Ref KeyPairName
       NetworkInterfaces:
         - SubnetId: !Ref MyBastionSubnetId
