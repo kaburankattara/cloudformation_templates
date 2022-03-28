@@ -7,10 +7,6 @@ Parameters:
   Environment:
     Description: Type of this environment.
     Type: String
-    AllowedValues:
-      - prod
-      - staging
-      - dev
   KeyPairName:
     Type: String
   # Beanstalk環境で使用するソリューションスタック（プラットフォームバージョン）の名前
