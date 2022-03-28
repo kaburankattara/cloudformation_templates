@@ -13,6 +13,21 @@ Parameters:
       - dev
   KeyPairName:
     Type: String
+  # Beanstalk環境で使用するソリューションスタック（プラットフォームバージョン）の名前
+  SolutionStackName:
+    Type: String
+  # Beanstalk管理下のEC2のオートスケーリングの最大サイズ
+  AutoscalingMaxSize:
+    Type: String
+  # Beanstalk管理下のEC2のオートスケーリングの最小サイズ
+  AutoscalingMinSize:
+    Type: String
+  # Beanstalk管理下のEC2のインスタンスタイプ
+  InstanceTypes:
+    Type: String
+  # 通知の送信先となる E メールアドレス、Amazon SQS キュー、または URL
+  NotificationEndpoint:
+    Type: String
   # 証明書のARN
   SSLCertificateId:
     Type: String
@@ -73,21 +88,22 @@ Resources:
         - Namespace: aws:elasticbeanstalk:application
           OptionName: Application Healthcheck URL
           Value: /
-        - Namespace: aws:elasticbeanstalk:application:environment
-          OptionName: sysDateConf
-          Value: 20220103
+# 環境変数を追加したい場合、以下をコメントアウトして使用する
+#        - Namespace: aws:elasticbeanstalk:application:environment
+#          OptionName: sysDateConf
+#          Value: 20220103
         - Namespace: aws:autoscaling:launchconfiguration
           OptionName: MonitoringInterval
           Value: 1 minute
         - Namespace: aws:autoscaling:asg
           OptionName: MinSize
-          Value: 2
+          Value: !Ref AutoscalingMinSize
         - Namespace: aws:autoscaling:asg
           OptionName: MaxSize
-          Value: 3
+          Value: !Ref AutoscalingMaxSize
         - Namespace: aws:ec2:instances
           OptionName: InstanceTypes
-          Value: t3.nano
+          Value: !Ref InstanceTypes
         - Namespace: aws:autoscaling:trigger
           OptionName: MeasureName
           Value: CPUUtilization
@@ -103,11 +119,11 @@ Resources:
         - Namespace: aws:autoscaling:scheduledaction
           ResourceName: bussinessHours
           OptionName: MinSize
-          Value: 2
+          Value: !Ref AutoscalingMinSize
         - Namespace: aws:autoscaling:scheduledaction
           ResourceName: bussinessHours
           OptionName: MaxSize
-          Value: 4
+          Value: !Ref AutoscalingMaxSize
         - Namespace: aws:autoscaling:scheduledaction
           ResourceName: bussinessHours
           OptionName: StartTime
@@ -169,11 +185,11 @@ Resources:
           Value: false
         - Namespace: aws:elasticbeanstalk:sns:topics
           OptionName: Notification Endpoint
-          Value: a@a
+          Value: !Ref NotificationEndpoint
         - Namespace: aws:elasticbeanstalk:environment
           OptionName: EnvironmentType
           Value: LoadBalanced
-      SolutionStackName: 64bit Amazon Linux 2 v3.2.12 running Corretto 8
+      SolutionStackName: !Ref SolutionStackName
 
   sampleEnvironment:
     Type: AWS::ElasticBeanstalk::Environment
