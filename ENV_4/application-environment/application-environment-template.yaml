@@ -71,11 +71,21 @@ Parameters:
     Type: String
 
   # BeansTalk
-  SSLCertificateId:
+  BeansTalkSolutionStackName:
     Type: String
-  S3BucketForFirstDeploy:
+  BeansTalkInstanceTypes:
     Type: String
-  DeployTargetForFirstDeploy:
+  BeansTalkAutoscalingMaxSize:
+    Type: String
+  BeansTalkAutoscalingMinSize:
+    Type: String
+  BeansTalkNotificationEndpoint:
+    Type: String
+  BeansTalkSSLCertificateId:
+    Type: String
+  BeansTalkS3BucketForFirstDeploy:
+    Type: String
+  BeansTalkDeployTargetForFirstDeploy:
     Type: String
 
   # RDS
@@ -107,19 +117,19 @@ Resources:
         AppSubnet1CidrBlock: !Ref AppSubnet1CidrBlock
         AppSubnet2CidrBlock: !Ref AppSubnet2CidrBlock
 
-  Bastion:
-    Type: AWS::CloudFormation::Stack
-    Properties:
-      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/bastion.yaml
-      Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        SpaceChar: !Ref SpaceChar
-        KeyPairName: !Ref KeyPairName
-        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
-        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
-        Ec2ImageId: !Ref BastionEc2ImageId
-        Ec2InstanceType: !Ref BastionEc2InstanceType
+#  Bastion:
+#    Type: AWS::CloudFormation::Stack
+#    Properties:
+#      TemplateURL: https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/application-environment/bastion.yaml
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        SpaceChar: !Ref SpaceChar
+#        KeyPairName: !Ref KeyPairName
+#        MyBastionSubnetId: !GetAtt VPC.Outputs.MyBastionSubnetId
+#        MySshSGId: !GetAtt VPC.Outputs.MySshSGId
+#        Ec2ImageId: !Ref BastionEc2ImageId
+#        Ec2InstanceType: !Ref BastionEc2InstanceType
 
 #  S3:
 #    Type: AWS::CloudFormation::Stack
@@ -140,9 +150,14 @@ Resources:
         MyFrontSubnet1Id: !GetAtt VPC.Outputs.MyFrontSubnet1Id
         MyFrontSubnet2Id: !GetAtt VPC.Outputs.MyFrontSubnet2Id
         MyAppSGId: !GetAtt VPC.Outputs.MyAppSGId
-        SSLCertificateId: !Ref SSLCertificateId
-        S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
-        DeployTargetForFirstDeploy: !Ref DeployTargetForFirstDeploy
+        SolutionStackName: !Ref BeansTalkSolutionStackName
+        InstanceTypes: !Ref BeansTalkInstanceTypes
+        AutoscalingMaxSize: !Ref BeansTalkAutoscalingMaxSize
+        AutoscalingMinSize: !Ref BeansTalkAutoscalingMinSize
+        NotificationEndpoint: !Ref BeansTalkNotificationEndpoint
+        SSLCertificateId: !Ref BeansTalkSSLCertificateId
+        S3BucketForFirstDeploy: !Ref BeansTalkS3BucketForFirstDeploy
+        DeployTargetForFirstDeploy: !Ref BeansTalkDeployTargetForFirstDeploy
 
 #  Batch:
 #    Type: AWS::CloudFormation::Stack

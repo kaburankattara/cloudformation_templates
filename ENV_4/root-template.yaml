@@ -82,17 +82,40 @@ Parameters:
     Default: t2.micro
 
   # BeansTalk
-  SSLCertificateId:
+  # Beanstalk環境で使用するソリューションスタック（プラットフォームバージョン）の名前
+  BeansTalkSolutionStackName:
+    Type: String
+    Default: 64bit Amazon Linux 2 v3.2.12 running Corretto 8
+  # Beanstalk管理下のEC2のインスタンスタイプ
+  BeansTalkInstanceTypes:
+    Type: String
+    Default: t3.nano
+  # Beanstalk管理下のEC2のオートスケーリングの最大サイズ
+  BeansTalkAutoscalingMaxSize:
+    Type: String
+    Default: 3
+  # Beanstalk管理下のEC2のオートスケーリングの最小サイズ
+  BeansTalkAutoscalingMinSize:
+    Type: String
+    Default: 2
+  # 通知の送信先となる E メールアドレス、Amazon SQS キュー、または URL
+  BeansTalkNotificationEndpoint:
+    Type: String
+    Default: a@a
+  # 証明書のARN
+  BeansTalkSSLCertificateId:
     Description: param for Tokyo or Osaka
     Type: String
     Default: arn:aws:acm:ap-northeast-3:498588106976:certificate/27cf533d-6ca5-43b9-9ac9-35f1a5d8178f
-#    Default: arn:aws:acm:ap-northeast-1:498588106976:certificate/4b64b506-0eb9-415d-b210-efc08389b9a5
-  S3BucketForFirstDeploy:
+    #Default: arn:aws:acm:ap-northeast-1:498588106976:certificate/4b64b506-0eb9-415d-b210-efc08389b9a5
+  # 初回デプロイ時にデプロイするソースを格納しているバケット名
+  BeansTalkS3BucketForFirstDeploy:
     Description: param for Tokyo or Osaka
     Type: String
     Default: cf-templates-lpwe8q0rzy1m-ap-northeast-3
-#    Default: cf-templates-lpwe8q0rzy1m-ap-northeast-1
-  DeployTargetForFirstDeploy:
+    #Default: cf-templates-lpwe8q0rzy1m-ap-northeast-1
+  # 初回デプロイ時にデプロイするソースファイル名
+  BeansTalkDeployTargetForFirstDeploy:
     Type: String
     Default: helloworld-0.0.1-SNAPSHOT.jar
 
@@ -133,6 +156,7 @@ Resources:
         Env: !Ref Env
         SpaceChar: !Ref SpaceChar
         KeyPairName: !Ref KeyPairName
+        # VPC
         AvailabilityZone1: !Ref AvailabilityZone1
         AvailabilityZone2: !Ref AvailabilityZone2
         VpcCidrBlock: !Ref VpcCidrBlock
@@ -148,9 +172,14 @@ Resources:
         BatchImageId: !Ref BatchImageId
         BatchEc2InstanceType: !Ref BatchEc2InstanceType
         # BeansTalk
-        SSLCertificateId: !Ref SSLCertificateId
-        S3BucketForFirstDeploy: !Ref S3BucketForFirstDeploy
-        DeployTargetForFirstDeploy: !Ref DeployTargetForFirstDeploy
+        BeansTalkSolutionStackName: !Ref BeansTalkSolutionStackName
+        BeansTalkInstanceTypes: !Ref BeansTalkInstanceTypes
+        BeansTalkAutoscalingMaxSize: !Ref BeansTalkAutoscalingMaxSize
+        BeansTalkAutoscalingMinSize: !Ref BeansTalkAutoscalingMinSize
+        BeansTalkNotificationEndpoint: !Ref BeansTalkNotificationEndpoint
+        BeansTalkSSLCertificateId: !Ref BeansTalkSSLCertificateId
+        BeansTalkS3BucketForFirstDeploy: !Ref BeansTalkS3BucketForFirstDeploy
+        BeansTalkDeployTargetForFirstDeploy: !Ref BeansTalkDeployTargetForFirstDeploy
         # RDS
         Username: !Ref Username
         Password: !Ref Password
