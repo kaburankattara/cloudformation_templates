@@ -33,11 +33,6 @@ Parameters:
   Environment:
     Description: Type of this environment.
     Type: String
-    Default: prod
-    AllowedValues:
-      - prod
-      - stag
-      - dev
   SystemName:
     Description: Name of this system.
     Type: String

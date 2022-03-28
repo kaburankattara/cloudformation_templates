@@ -5,13 +5,8 @@ Parameters:
     Type: String
   Env:
     Type: String
-    AllowedValues:
-      - prod
-      - stag
-      - dev
   SpaceChar:
     Type: String
-    Default: '-'
   KeyPairName:
     Type: String
   TypeBastion:

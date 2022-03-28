@@ -1,6 +1,65 @@
 AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+      - Label:
+          default: Stack Configuration
+        Parameters:
+          - SysName
+          - Env
+          - SpaceChar
+          - KeyPairName
+          - AvailabilityZone1
+          - AvailabilityZone2
+      - Label:
+          default: application-environment VPC Configuration
+        Parameters:
+          - VpcCidrBlock
+          - BastionSubnetCidrBlock
+          - FrontSubnet1CidrBlock
+          - FrontSubnet2CidrBlock
+          - AppSubnet1CidrBlock
+          - AppSubnet2CidrBlock
+      - Label:
+          default: application-environment Bastion Configuration
+        Parameters:
+          - BastionEc2ImageId
+          - BastionEc2InstanceType
+      - Label:
+          default: application-environment Batch Configuration
+        Parameters:
+          - BatchImageId
+          - BatchEc2InstanceType
+      - Label:
+          default: application-environment BeansTalk Configuration
+        Parameters:
+          - BeansTalkSolutionStackName
+          - BeansTalkInstanceTypes
+          - BeansTalkAutoscalingMaxSize
+          - BeansTalkAutoscalingMinSize
+          - BeansTalkNotificationEndpoint
+          - BeansTalkSSLCertificateId
+          - BeansTalkS3BucketForFirstDeploy
+          - BeansTalkDeployTargetForFirstDeploy
+      - Label:
+          default: application-environment RDS Configuration
+        Parameters:
+          - RDSUsername
+          - RDSPassword
+
+      - Label:
+          default: development-environment CodePipelineOfBeansTalk Configuration
+        Parameters:
+          - RepositoryUrl
+          - FullRepositoryId
+      - Label:
+          default: development-environment CodePipelineOfBatch Configuration
+        Parameters:
+          - BuildedSource
+          - DeployTargetEC2Name
+
 Parameters:
-  # common
+  # Stack
   SysName:
     Type: String
     Default: helloWorld
@@ -184,18 +243,18 @@ Resources:
         RDSUsername: !Ref RDSUsername
         RDSPassword: !Ref RDSPassword
 
-#  DevelopmentEnvironment:
-#    Type: AWS::CloudFormation::Stack
-#    DependsOn: ApplicationEnvironment
-#    Properties:
-#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
-#      Parameters:
-#        SysName: !Ref SysName
-#        Env: !Ref Env
-#        SpaceChar: !Ref SpaceChar
-#        RepositoryUrl: !Ref RepositoryUrl
-#        FullRepositoryId: !Ref FullRepositoryId
-#        BuildedSource: !Ref BuildedSource
-#        DeployTargetEC2Name: !Ref DeployTargetEC2Name
+  DevelopmentEnvironment:
+    Type: AWS::CloudFormation::Stack
+    DependsOn: ApplicationEnvironment
+    Properties:
+      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
+      Parameters:
+        SysName: !Ref SysName
+        Env: !Ref Env
+        SpaceChar: !Ref SpaceChar
+        RepositoryUrl: !Ref RepositoryUrl
+        FullRepositoryId: !Ref FullRepositoryId
+        BuildedSource: !Ref BuildedSource
+        DeployTargetEC2Name: !Ref DeployTargetEC2Name
 
 

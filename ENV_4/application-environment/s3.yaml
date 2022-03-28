@@ -2,7 +2,6 @@ AWSTemplateFormatVersion: '2010-09-09'
 Description: This CloudFormation template to create RDS db instances.
 
 Resources:
-
   MyS3User:
     Type: AWS::IAM::User
     Properties:
