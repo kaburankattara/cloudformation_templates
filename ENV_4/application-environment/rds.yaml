@@ -6,8 +6,6 @@ Mappings:
     DBInstance:
       Engine: aurora-postgresql
       EngineVersion: 10.16
-      RDS1AvailabilityZone: ap-northeast-1a
-      RDS2AvailabilityZone: ap-northeast-1c
       BackupRetentionPeriod: 7
       PreferredBackupWindow: 13:00-13:30
       ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
@@ -21,8 +19,6 @@ Mappings:
     DBInstance:
       Engine: aurora-postgresql
       EngineVersion: 10.16
-      RDS1AvailabilityZone: ap-northeast-1a
-      RDS2AvailabilityZone: ap-northeast-1c
       BackupRetentionPeriod: 7
       PreferredBackupWindow: 13:00-13:30
       ClusterPreferredMaintenanceWindow: tue:13:30-tue:14:00
@@ -46,6 +42,10 @@ Parameters:
     Description: Name of this system.
     Type: String
     Default: my-rds
+  AvailabilityZone1:
+    Type: String
+  AvailabilityZone2:
+    Type: String
   Username:
     Description: Name of DB mater username.
     Type: String
@@ -141,7 +141,7 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
-      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS1AvailabilityZone ]
+      AvailabilityZone: !Ref AvailabilityZone1
       CopyTagsToSnapshot: true
       DBClusterIdentifier: !Ref RDSCluster
       DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]
@@ -164,7 +164,7 @@ Resources:
     Type: AWS::RDS::DBInstance
     Properties:
       AutoMinorVersionUpgrade: !FindInMap [ !Ref Environment, DBInstance, AutoMinorVersionUpgrade ]
-      AvailabilityZone: !FindInMap [ !Ref Environment, DBInstance, RDS2AvailabilityZone ]
+      AvailabilityZone: !Ref AvailabilityZone2
       CopyTagsToSnapshot: true
       DBClusterIdentifier: !Ref RDSCluster
       DBInstanceClass: !FindInMap [ !Ref Environment, DBInstance, DBInstanceClass ]

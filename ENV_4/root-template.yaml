@@ -120,11 +120,11 @@ Parameters:
     Default: helloworld-0.0.1-SNAPSHOT.jar
 
   # RDS
-  Username:
+  RDSUsername:
     Description: Name of DB mater username.
     Type: String
     Default: admintest
-  Password:
+  RDSPassword:
     Description: Name of DB mater user password.
     Type: String
     Default: a1111111
@@ -181,21 +181,21 @@ Resources:
         BeansTalkS3BucketForFirstDeploy: !Ref BeansTalkS3BucketForFirstDeploy
         BeansTalkDeployTargetForFirstDeploy: !Ref BeansTalkDeployTargetForFirstDeploy
         # RDS
-        Username: !Ref Username
-        Password: !Ref Password
+        RDSUsername: !Ref RDSUsername
+        RDSPassword: !Ref RDSPassword
 
-  DevelopmentEnvironment:
-    Type: AWS::CloudFormation::Stack
-    DependsOn: ApplicationEnvironment
-    Properties:
-      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
-      Parameters:
-        SysName: !Ref SysName
-        Env: !Ref Env
-        SpaceChar: !Ref SpaceChar
-        RepositoryUrl: !Ref RepositoryUrl
-        FullRepositoryId: !Ref FullRepositoryId
-        BuildedSource: !Ref BuildedSource
-        DeployTargetEC2Name: !Ref DeployTargetEC2Name
+#  DevelopmentEnvironment:
+#    Type: AWS::CloudFormation::Stack
+#    DependsOn: ApplicationEnvironment
+#    Properties:
+#      TemplateURL: 'https://cf-templates-lpwe8q0rzy1m-ap-northeast-1.s3.ap-northeast-1.amazonaws.com/development-environment/development-environment-template.yaml'
+#      Parameters:
+#        SysName: !Ref SysName
+#        Env: !Ref Env
+#        SpaceChar: !Ref SpaceChar
+#        RepositoryUrl: !Ref RepositoryUrl
+#        FullRepositoryId: !Ref FullRepositoryId
+#        BuildedSource: !Ref BuildedSource
+#        DeployTargetEC2Name: !Ref DeployTargetEC2Name
 
 
